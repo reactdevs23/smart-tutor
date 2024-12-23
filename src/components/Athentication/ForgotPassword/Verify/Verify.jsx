@@ -5,6 +5,7 @@ import OTPInput, { ResendOTP } from "otp-input-react";
 import Header from "@/components/Athentication/Header/Header";
 import clsx from "clsx";
 import { Button } from "@/components/common";
+
 const renderButton = (buttonProps) => {
   return (
     <button
@@ -12,7 +13,7 @@ const renderButton = (buttonProps) => {
       disabled={buttonProps.remainingTime !== 0}
       className={clsx(
         classes.resend,
-        buttonProps.remainingtime !== 0 && classes.notAllowed
+        buttonProps.remainingTime !== 0 && classes.notAllowed
       )}
     >
       {buttonProps.remainingTime !== 0
@@ -21,7 +22,9 @@ const renderButton = (buttonProps) => {
     </button>
   );
 };
-const renderTime = () => React.Fragment;
+
+const renderTime = () => <></>; // Correct usage of React.Fragment
+
 const Verify = ({
   codeSentOn,
 
