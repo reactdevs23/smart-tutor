@@ -76,7 +76,14 @@ const LoginForm = () => {
           setIsActive={setShowDropdown}
           selectedValue={selectedCategory}
           onSelect={(val) => setSelectedCategory(val)}
-        />
+        />{" "}
+        <Button
+          transparent
+          className={classes.forgotPasword}
+          to="/forgot-password"
+        >
+          Forgot Password
+        </Button>
         {error && (
           <Text error sm className={classes.errorMessage}>
             {error}
@@ -90,7 +97,7 @@ const LoginForm = () => {
           className={classes.submitButton}
         >
           {isLoading ? "Logging in..." : "Log In"}
-        </Button>
+        </Button>{" "}
       </form>
       <Text primitive600 sm className={classes.or} textCenter>
         or

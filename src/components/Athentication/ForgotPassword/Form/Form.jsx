@@ -1,5 +1,5 @@
 "use client";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import classes from "./Form.module.css";
 import { Button } from "@/components/common";
 
@@ -40,7 +40,11 @@ const Form = ({ step, setStep }) => {
     // Example: await saveNewPasswordAPI(email, newPassword);
     setStep((prev) => prev + 1);
   };
-
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      console.log("Client-side code here, window is available.");
+    }
+  }, []);
   return (
     <section className={classes.wrapper}>
       <form action="" className={classes.form}>
