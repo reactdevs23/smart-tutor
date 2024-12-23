@@ -1,3 +1,4 @@
+"use client";
 import { Button, Heading, Input, Text } from "@/components/common";
 import React from "react";
 import classes from "./EnterEmail.module.css";

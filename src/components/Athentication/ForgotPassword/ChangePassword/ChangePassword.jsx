@@ -1,3 +1,4 @@
+"use client";
 import React from "react";
 import classes from "./ChangePassword.module.css";
 import Header from "@/components/Athentication/Header/Header";
