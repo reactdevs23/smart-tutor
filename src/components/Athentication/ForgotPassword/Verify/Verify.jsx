@@ -1,28 +1,33 @@
-"use client";
-
 import React, { useState, useEffect } from "react";
 import classes from "./Verify.module.css";
-import OTPInput from "otp-input-react";
-
-import Header from "@/components/Athentication/Header/Header";
 import clsx from "clsx";
 import { Button } from "@/components/common";
+import Header from "@/components/Athentication/Header/Header";
 
 const Verify = ({
-  codeSentOn, // Timestamp when the OTP was sent
-  xl2, // Additional styles or classes
-  onVerify, // Callback function triggered on successful verification
-  noResend, // Boolean to disable resend functionality
-  heading, // Heading for the page
-  info, // Informational text
-  setStep, // Function to update the step in the flow
+  codeSentOn,
+  xl2,
+  onVerify,
+  noResend,
+  heading,
+  info,
+  setStep,
 }) => {
-  const [OTP, setOTP] = useState(""); // User-entered OTP
-  const [otpInvalid, setOtpInvalid] = useState(false); // Flag for invalid OTP
-  const [remainingTime, setRemainingTime] = useState(30); // Resend timer
-  const [canResend, setCanResend] = useState(false); // Flag to enable/disable resend button
+  const [OTP, setOTP] = useState("");
+  const [otpInvalid, setOtpInvalid] = useState(false);
+  const [remainingTime, setRemainingTime] = useState(30);
+  const [canResend, setCanResend] = useState(false);
+  const [OtpInput, setOtpInput] = useState(null); // Lazy load OTPInput
 
-  // Countdown Timer Logic
+  // Lazy load OTPInput on client side
+  useEffect(() => {
+    const loadOtpInput = async () => {
+      const { default: OTPInput } = await import("otp-input-react");
+      setOtpInput(() => OTPInput);
+    };
+    loadOtpInput();
+  }, []);
+
   useEffect(() => {
     let timer;
     if (remainingTime > 0) {
@@ -36,29 +41,20 @@ const Verify = ({
     return () => clearInterval(timer);
   }, [remainingTime]);
 
-  // Placeholder: Resend OTP Handler
   const handleResend = () => {
-    // TODO: Backend Integration - Replace this alert with an API call
     console.log("Resend OTP triggered.");
     alert("Verification code resent! (Backend API here)");
-    setRemainingTime(30); // Reset the timer
+    setRemainingTime(30);
     setCanResend(false);
   };
 
-  // Placeholder: Verify OTP Handler
   const handleVerify = (e) => {
     e.preventDefault();
-
-    // TODO: Backend Integration - Replace this with an API call
-    console.log("Verify OTP triggered with OTP:", OTP);
-
     if (OTP === "123456") {
-      // Simulating successful validation
       setOtpInvalid(false);
-      setStep((prev) => prev + 1); // Proceed to the next step
+      setStep((prev) => prev + 1);
       onVerify && onVerify();
     } else {
-      // Simulating invalid OTP
       setOtpInvalid(true);
     }
   };
@@ -73,15 +69,20 @@ const Verify = ({
       />
       <div className={classes.container}>
         <div className={clsx(classes.inputs, classes.noResendInputs)}>
-          <OTPInput
-            inputClassName={clsx(classes.input, otpInvalid && classes.hasError)}
-            value={OTP}
-            onChange={setOTP}
-            autoFocus
-            OTPLength={6}
-            otpType="number"
-            disabled={false}
-          />
+          {OtpInput && (
+            <OtpInput
+              inputClassName={clsx(
+                classes.input,
+                otpInvalid && classes.hasError
+              )}
+              value={OTP}
+              onChange={setOTP}
+              autoFocus
+              OTPLength={6}
+              otpType="number"
+              disabled={false}
+            />
+          )}
         </div>
 
         {otpInvalid && (
@@ -91,17 +92,13 @@ const Verify = ({
         )}
 
         <div className={clsx(classes.actions, noResend && classes.noResend)}>
-          <Button
-            onClick={handleVerify} // Trigger OTP verification
-            size="md"
-            btnPrimary
-          >
+          <Button onClick={handleVerify} size="md" btnPrimary>
             Verify
           </Button>
 
           {!noResend && (
             <button
-              onClick={handleResend} // Trigger OTP resend
+              onClick={handleResend}
               disabled={!canResend}
               className={clsx(classes.resend, !canResend && classes.notAllowed)}
             >
