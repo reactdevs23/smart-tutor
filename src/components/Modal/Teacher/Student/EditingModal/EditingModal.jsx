@@ -14,7 +14,6 @@ import { handleKeyDown } from "@/hooks";
 import { banner, uploadImg } from "@/images";
 import clsx from "clsx";
 
-const availability = ["yes", "no"];
 const mediums = ["Bangla", "English", "Religious Studies"];
 const subjectList = ["Bangla", "English", "Physics", "Chemistry"];
 const allclasses = ["class 8", "class 9", "class 10", "HSC-1st year"];
@@ -27,7 +26,7 @@ const EditingModal = ({
   currentAvailability,
   currentMedium,
   currentSubjects,
-  currentClassList,
+  currentClassName,
   onEdit,
 }) => {
   const [name, setName] = useState(currentName);
@@ -56,10 +55,9 @@ const EditingModal = ({
     }
   };
 
-  const [isAvailable, setIsAvailable] = useState(currentAvailability);
   const [medium, setMedium] = useState(currentMedium);
   const [subjects, setSubjects] = useState(currentSubjects);
-  const [classLists, setClassLists] = useState(currentClassList);
+  const [myClassName, setMyClassName] = useState(currentClassName);
 
   return (
     <section className={clsx(classes.wrapper)}>
@@ -86,16 +84,6 @@ const EditingModal = ({
           value={email}
           setValue={setEmail}
           placeholder="Enter your Email "
-        />
-
-        <Input
-          name="sallary"
-          type="number"
-          label="Sallary"
-          onKeyDown={handleKeyDown}
-          value={sallary}
-          setValue={setSallary}
-          placeholder="Enter your Sallary "
         />
 
         <TextArea
@@ -138,13 +126,6 @@ const EditingModal = ({
       </div>
       <div className={classes.multipleChoice}>
         <MultipleChoice
-          options={availability}
-          selected={isAvailable}
-          setSelected={setIsAvailable}
-          label="Available Status"
-          name="availability-status"
-        />
-        <MultipleChoice
           options={mediums}
           selected={medium}
           setSelected={setMedium}
@@ -161,8 +142,8 @@ const EditingModal = ({
         />
         <MultipleChoice
           options={allclasses}
-          selected={classLists}
-          setSelected={setClassLists}
+          selected={myClassName}
+          setSelected={setMyClassName}
           label="Select Class"
           allowMultiple={true}
           name="class-selection"
