@@ -47,52 +47,6 @@ const Form = ({ step, setStep }) => {
   }, []);
   return (
     <section className={classes.wrapper}>
-      <form action="" className={classes.form}>
-        {/* Step 1: Enter Email */}
-        {step === 1 && (
-          <EnterEmail
-            email={email}
-            setEmail={setEmail}
-            onEnterEmail={handleEnterEmail} // Trigger email submission
-          />
-        )}
-
-        {/* Step 2: Verify Code */}
-        {step === 2 && (
-          <Verify
-            heading="Verification Code"
-            info="A verification code was sent to your email. Please enter the confirmation code."
-            setStep={setStep}
-            onVerify={handleVerifyCode} // Trigger OTP verification
-            xl2
-            codeSentOn={email} // Pass email for context
-          />
-        )}
-
-        {/* Step 3: Change Password */}
-        {step === 3 && (
-          <ChangePassword
-            setStep={setStep}
-            newPassword={newPassword}
-            setNewPassword={setNewPassword}
-            confirmNewPassword={confirmNewPassword}
-            setConfirmNewPassword={setConfirmNewPassword}
-            onSavePassword={handleSavePassword} // Trigger password save
-          />
-        )}
-
-        {/* Step 4: Password Changed */}
-        {step === 4 && (
-          <PasswordChanged
-            setStep={setStep}
-            newPassword={newPassword}
-            setNewPassword={setNewPassword}
-            confirmNewPassword={confirmNewPassword}
-            setConfirmNewPassword={setConfirmNewPassword}
-          />
-        )}
-      </form>
-
       {/* Return to Login button (visible for steps < 4) */}
       {step < 4 && (
         <Button transparent className={classes.button} to="/login">
