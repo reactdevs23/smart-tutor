@@ -72,7 +72,7 @@
 }
 
 /* .inputs */
-input::placeholder {
+.input::placeholder {
   color: var(--Text-Placeholder);
   opacity: 0.5;
 }
