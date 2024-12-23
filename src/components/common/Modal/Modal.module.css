@@ -30,7 +30,7 @@
 
   /* my */
   margin: 0 auto;
-  max-width: 448px;
+  max-width: 900px;
   width: 95%;
   max-height: calc(100vh - 5%);
   min-height: 250px;
@@ -46,7 +46,10 @@
 
   padding: 24px;
 }
-
+.sm {
+  max-width: 450px;
+  min-height: auto;
+}
 .modalOverlay.active {
   opacity: 1;
   pointer-events: all;

@@ -2,9 +2,9 @@ import React, { useState } from "react";
 import classes from "./Verify.module.css";
 import OTPInput, { ResendOTP } from "otp-input-react";
 
-import Header from "components/Athentication/Header/Header";
+import Header from "@/components/Athentication/Header/Header";
 import clsx from "clsx";
-import { Button } from "components/common";
+import { Button } from "@/components/common";
 const renderButton = (buttonProps) => {
   return (
     <button

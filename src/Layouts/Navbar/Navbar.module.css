@@ -24,6 +24,9 @@
   justify-content: space-between;
   padding: 10px 0;
   gap: 48px;
+  max-width: 1280px;
+  width: 90%;
+  margin: 0 auto;
 }
 .logo {
   max-width: 220px;
@@ -48,10 +51,10 @@
   color: var(--Primitive-300);
 }
 .navActive {
-  color: var(--Primitive-950);
+  color: var(--Primitive-Blue-500);
 }
 .primitive950 .navActive {
-  color: var(--Primitive-0);
+  color: var(--Primitive-Blue-500);
 }
 
 .buttonContainer {
@@ -66,7 +69,33 @@
   margin-left: auto;
   display: none;
 }
+.userContainer {
+  display: flex;
 
+  align-items: center;
+  gap: 8px;
+  border: 1px solid var(--Primitive-200);
+  padding: 8px 12px;
+  border-radius: 8px;
+  cursor: pointer;
+}
+.userImg {
+  max-width: 36px;
+  border-radius: 50%;
+  aspect-ratio: 1/1;
+  object-fit: cover;
+  object-position: center;
+  border: 1px solid var(--Primitive-500);
+}
+.loginAs {
+  text-transform: capitalize;
+}
+.downArrow,
+.upArrow {
+  font-size: 18px;
+  color: var(--Primitive-700);
+  margin-left: 15px;
+}
 .arrow {
   font-size: 18px;
 }
@@ -79,10 +108,17 @@
 .button {
   padding: 10px 20px;
 }
+.buttonContainer .buttonActive {
+  background: var(--Primitive-Blue-500);
+  color: var(--Primitive-0);
+}
 @media only screen and (max-width: 991px) {
   .wrapper {
     padding: 10px 0;
     height: 80px;
+  }
+  .logo {
+    max-width: 180px;
   }
   /* .header {
     width: calc(100% - 48px);
@@ -101,7 +137,7 @@
     top: calc(100% + 1px);
     left: auto;
     right: 0;
-    padding-top: 0px;
+    padding-top: 30px;
 
     width: calc(100%);
     max-width: 320px;

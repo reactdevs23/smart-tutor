@@ -1,6 +1,6 @@
 import React from "react";
 import classes from "./Header.module.css";
-import { Heading, Text } from "components/common";
+import { Heading, Text } from "@/components/common";
 import clsx from "clsx";
 
 const Header = ({ heading, info, codeSentOn, xl2 }) => {

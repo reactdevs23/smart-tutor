@@ -1,13 +1,15 @@
+"use client";
+
 import React, { useState } from "react";
 import classes from "./LoginForm.module.css";
 
-import { Link } from "react-router-dom";
-import { Button, Dropdown, Heading, Input, Text } from "components/common";
+import { Button, Dropdown, Heading, Input, Text } from "@/components/common";
 
 import { FcGoogle } from "react-icons/fc";
 import { FaApple, FaFacebook } from "react-icons/fa";
+import { categories } from "@/common";
 import clsx from "clsx";
-import { categories } from "common";
+import Link from "next/link";
 
 const LoginForm = () => {
   const [email, setEmail] = useState("");
@@ -79,7 +81,7 @@ const LoginForm = () => {
       </div>{" "}
       <Text xs primitive600 className={classes.needAnAccount}>
         Don't have an account?
-        <Link className={classes.link} to="/sign-up">
+        <Link className={classes.link} href="/sign-up">
           Sign Up
         </Link>
       </Text>

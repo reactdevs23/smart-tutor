@@ -1,6 +1,6 @@
 import React from "react";
 import classes from "./SectionHeading.module.css";
-import { Heading } from "components/common";
+import { Heading } from "@/components/common";
 
 const SectionHeading = ({ children }) => {
   return (

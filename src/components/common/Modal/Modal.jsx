@@ -10,6 +10,7 @@ const Modal = ({
 
   heading,
   children,
+  sm,
 
   ...rest
 }) => {
@@ -27,6 +28,7 @@ const Modal = ({
           isActive && classes.active,
 
           classes.modal,
+          sm && classes.sm,
           "overflow"
         )}
         {...rest}

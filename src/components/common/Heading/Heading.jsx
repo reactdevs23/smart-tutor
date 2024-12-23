@@ -1,6 +1,7 @@
 import React from "react";
 import classes from "./Heading.module.css";
 import clsx from "clsx";
+
 const Heading = ({
   children,
   xs,

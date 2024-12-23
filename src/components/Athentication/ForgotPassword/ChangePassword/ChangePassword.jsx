@@ -1,7 +1,7 @@
 import React from "react";
 import classes from "./ChangePassword.module.css";
-import Header from "components/Athentication/Header/Header";
-import { Button, Input } from "components/common";
+import Header from "@/components/Athentication/Header/Header";
+import { Button, Input } from "@/components/common";
 
 const ChangePassword = ({
   newPassword,

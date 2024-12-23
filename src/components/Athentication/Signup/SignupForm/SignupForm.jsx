@@ -1,13 +1,14 @@
+"use client";
 import React, { useState } from "react";
 import classes from "./SignupForm.module.css";
 
-import { Link } from "react-router-dom";
-import { Button, Dropdown, Heading, Input, Text } from "components/common";
+import { Button, Dropdown, Heading, Input, Text } from "@/components/common";
 
 import { FcGoogle } from "react-icons/fc";
 import { FaApple, FaFacebook } from "react-icons/fa";
 import clsx from "clsx";
-import { categories } from "common";
+import { categories } from "@/common";
+import Link from "next/link";
 
 const SignupForm = ({ setStep }) => {
   const [name, setName] = useState("");
@@ -84,8 +85,8 @@ const SignupForm = ({ setStep }) => {
       </div>{" "}
       <Text xs primitive600 className={classes.needAnAccount}>
         Already have an account?
-        <Link className={classes.link} to="/sign-up">
-          Sign Up
+        <Link className={classes.link} href="/login">
+          Login
         </Link>
       </Text>
     </div>

@@ -1,10 +1,12 @@
+"use client";
 import React, { useState } from "react";
 import classes from "./Form.module.css";
-import { Button } from "components/common";
+import { Button } from "@/components/common";
+
+import EnterEmail from "../EnterEmail/EnterEmail";
+import Verify from "@/components/Athentication/ForgotPassword/Verify/Verify";
 import ChangePassword from "../ChangePassword/ChangePassword";
 import PasswordChanged from "../PasswordChanged/PasswordChanged";
-import EnterEmail from "../EnterEmail/EnterEmail";
-import Verify from "components/Athentication/ForgotPassword/Verify/Verify";
 
 const Form = ({ step, setStep }) => {
   const [email, setEmail] = useState("");
@@ -55,9 +57,11 @@ const Form = ({ step, setStep }) => {
           />
         )}
       </form>{" "}
-      <Button transparent className={classes.button} to="/login">
-        Return to Login
-      </Button>
+      {step < 4 && (
+        <Button transparent className={classes.button} to="/login">
+          Return to Login
+        </Button>
+      )}
     </section>
   );
 };

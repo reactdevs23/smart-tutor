@@ -1,3 +1,4 @@
+"use client";
 import { useEffect, useRef } from "react";
 import clsx from "clsx";
 
@@ -17,6 +18,7 @@ const Dropdown = ({
   className,
   sm,
   label,
+  type2,
 }) => {
   const ref = useRef();
 
@@ -31,22 +33,29 @@ const Dropdown = ({
       )}
       ref={ref}
     >
-      <label htmlFor="input" className={classes.label}>
-        {label}
-      </label>
-      <div
-        className={clsx(classes.labelContainer)}
-        onClick={() => setIsActive((prev) => !prev)}
-      >
-        <Text base={!sm} sm={sm}>
-          {selectedValue ? selectedValue : "Select"}
-        </Text>
-        {isActive ? (
-          <FaChevronUp className={classes.arrow} />
-        ) : (
-          <FaChevronDown className={classes.arrow} />
-        )}
-      </div>
+      {type2 && (
+        <div onClick={() => setIsActive((prev) => !prev)}>{children}</div>
+      )}
+      {!type2 && (
+        <>
+          <label htmlFor="input" className={classes.label}>
+            {label}
+          </label>
+          <div
+            className={clsx(classes.labelContainer)}
+            onClick={() => setIsActive((prev) => !prev)}
+          >
+            <Text base={!sm} sm={sm}>
+              {selectedValue ? selectedValue : "Select"}
+            </Text>
+            {isActive ? (
+              <FaChevronUp className={classes.arrow} />
+            ) : (
+              <FaChevronDown className={classes.arrow} />
+            )}
+          </div>
+        </>
+      )}
       <div className={clsx(classes.dropdownMain, isActive && classes.active)}>
         <div className={clsx(classes.list, "overflow")}>
           {items?.map((item, idx) => {

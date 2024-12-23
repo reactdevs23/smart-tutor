@@ -1,11 +1,11 @@
 import React from "react";
 import classes from "./VerifyYourEmail.module.css";
-import { checkEmailImg } from "images";
-import { Button, Heading, Text } from "components/common";
+import { checkEmailImg } from "@/images";
+import { Button, Heading, Text } from "@/components/common";
 const VerifyYourEmail = () => {
   return (
     <div className={classes.wrapper}>
-      <img src={checkEmailImg} alt="#" className={classes.img} />
+      <img src={checkEmailImg.src} alt="#" className={classes.img} />
       <div className={classes.infoContainer}>
         <Heading xl3 font600>
           Verify your email

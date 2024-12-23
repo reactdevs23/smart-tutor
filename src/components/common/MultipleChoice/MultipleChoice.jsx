@@ -1,5 +1,7 @@
-import React from "react";
-import { Text } from "components/common";
+"use client";
+
+import React, { useEffect } from "react";
+import { Text } from "@/components/common";
 import classes from "./MultipleChoice.module.css";
 
 const MultipleChoice = ({
@@ -8,7 +10,7 @@ const MultipleChoice = ({
   selected,
   setSelected,
   allowMultiple = false,
-  name, // Add name prop
+  name,
 }) => {
   const handleOptionChange = (event) => {
     const { value, checked } = event.target;
@@ -40,7 +42,7 @@ const MultipleChoice = ({
                 checked={
                   allowMultiple
                     ? selected.includes(option)
-                    : selected === option
+                    : String(selected).toLowerCase() === option.toLowerCase()
                 }
                 onChange={handleOptionChange}
                 className={classes.label}

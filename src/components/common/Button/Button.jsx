@@ -1,8 +1,9 @@
 import React from "react";
 import clsx from "clsx";
 import classes from "./Button.module.css";
-import { Link } from "react-router-dom";
+
 import { ImSpinner } from "react-icons/im";
+import Link from "next/link";
 
 const Button = ({
   children,
@@ -91,7 +92,7 @@ const Button = ({
             wFull && classes.wFull,
             loading && classes.loading
           )}
-          to={to}
+          href={to}
         >
           {loading ? (
             <>
