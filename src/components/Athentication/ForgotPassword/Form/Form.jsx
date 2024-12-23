@@ -5,7 +5,7 @@ import { Button } from "@/components/common";
 
 // Step components
 import EnterEmail from "../EnterEmail/EnterEmail";
-import Verify from "@/components/Athentication/ForgotPassword/Verify/Verify";
+// import Verify from "@/components/Athentication/ForgotPassword/Verify/Verify";
 import ChangePassword from "../ChangePassword/ChangePassword";
 import PasswordChanged from "../PasswordChanged/PasswordChanged";
 
@@ -53,7 +53,7 @@ const Form = ({ step, setStep }) => {
         )}
 
         {/* Step 2: Verify Code */}
-        {step === 2 && (
+        {/* {step === 2 && (
           <Verify
             heading="Verification Code"
             info="A verification code was sent to your email. Please enter the confirmation code."
@@ -62,7 +62,7 @@ const Form = ({ step, setStep }) => {
             xl2
             codeSentOn={email} // Pass email for context
           />
-        )}
+        )} */}
 
         {/* Step 3: Change Password */}
         {step === 3 && (
