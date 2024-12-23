@@ -14,49 +14,77 @@ import { handleKeyDown } from "@/hooks";
 import { banner, uploadImg } from "@/images";
 import clsx from "clsx";
 
+// Dummy API function (for now)
+const submitTeacherData = async (teacherData) => {
+  console.log("Teacher Data Submitted:", teacherData);
+  // Simulate a delay for the API call
+  return new Promise((resolve) => setTimeout(resolve, 2000));
+};
+
 const availibility = ["Yes", "No"];
 const mediums = ["Bangla", "English", "Religious Studies"];
 const subjectList = ["Bangla", "English", "Physics", "Chemistry"];
 const allclasses = ["class 8", "class 9", "class 10", "HSC-1st year"];
+
 const TeacherDashboard = () => {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [sallary, setSallary] = useState("");
-
   const [description, setDescription] = useState("");
-  //upload img
   const [selectedImage, setSelectedImage] = useState(null);
   const [previewUrl, setPreviewUrl] = useState(null);
+  const [isAvailable, setIsAvailable] = useState("");
+  const [medium, setMedium] = useState("");
+  const [subjects, setSubjects] = useState([]);
+  const [classLists, setClassLists] = useState([]);
 
+  // Handle image selection
   const handleImageChange = (event) => {
     const file = event.target.files[0];
 
-    // Check if a file is selected
     if (!file) {
       return;
     }
 
-    // Validate file size (10MB = 10,485,760 bytes)
     if (file.size > 10485760) {
       alert("File size exceeds 10MB. Please select a smaller file.");
       return;
     }
 
-    // Validate file type (accepts only images)
     if (!file.type.startsWith("image/")) {
       alert("Please select a valid image file.");
       return;
     }
 
-    // Set the selected image and preview URL
     setSelectedImage(file);
     setPreviewUrl(URL.createObjectURL(file));
   };
 
-  const [isAvailable, setIsAvailable] = useState("");
-  const [medium, setMedium] = useState("");
-  const [subjects, setSubjects] = useState("");
-  const [classLists, setClassLists] = useState("");
+  // Handle form submission (no API for now, just simulate with console log)
+  const handleSubmit = async (event) => {
+    event.preventDefault();
+
+    const teacherData = {
+      name,
+      email,
+      sallary,
+      description,
+      image: selectedImage,
+      availability: isAvailable,
+      medium,
+      subjects,
+      classes: classLists,
+    };
+
+    try {
+      // Simulate API call
+      await submitTeacherData(teacherData);
+      alert("Teacher data submitted successfully!");
+    } catch (error) {
+      console.error("Error submitting data:", error);
+      alert("There was an error submitting your data.");
+    }
+  };
 
   return (
     <section className={clsx(classes.wrapper, "container")}>
@@ -65,16 +93,16 @@ const TeacherDashboard = () => {
       </div>
       <Header
         heading="Your Info"
-        info="Find a right students in your areas"
-      ></Header>
-      <form className={classes.inputWrapper}>
+        info="Find the right students in your areas"
+      />
+      <form className={classes.inputWrapper} onSubmit={handleSubmit}>
         <Input
           name="name"
           type="text"
           label="Full Name"
           value={name}
           setValue={setName}
-          placeholder="Enter your full name "
+          placeholder="Enter your full name"
         />
         <Input
           name="email"
@@ -82,19 +110,17 @@ const TeacherDashboard = () => {
           label="Email"
           value={email}
           setValue={setEmail}
-          placeholder="Enter your Email "
+          placeholder="Enter your Email"
         />
-
         <Input
           name="sallary"
           type="number"
-          label="Sallary"
+          label="Salary"
           onKeyDown={handleKeyDown}
           value={sallary}
           setValue={setSallary}
-          placeholder="Enter your Sallary "
+          placeholder="Enter your Salary"
         />
-
         <TextArea
           textarea
           name="description"
@@ -102,20 +128,20 @@ const TeacherDashboard = () => {
           label="Description"
           value={description}
           setValue={setDescription}
-          placeholder="Enter your Description "
+          placeholder="Enter your Description"
         />
       </form>
       <div className={classes.uploadImgContainer}>
         {previewUrl && (
           <div className={classes.preview}>
             <img
-              src={previewUrl.src}
+              src={previewUrl}
               alt="Image Preview"
               className={classes.image}
             />
           </div>
         )}
-        <img src={uploadImg.src} alt="#" className={classes.uploadImg} />{" "}
+        <img src={uploadImg.src} alt="#" className={classes.uploadImg} />
         <Text semiBold>
           <label htmlFor="uploadImg" className={classes.label}>
             Drag your file(s) or{" "}
@@ -155,7 +181,7 @@ const TeacherDashboard = () => {
           label="Select Subjects"
           allowMultiple
           name="subjects"
-        />{" "}
+        />
         <MultipleChoice
           options={allclasses}
           selected={classLists}
@@ -168,4 +194,5 @@ const TeacherDashboard = () => {
     </section>
   );
 };
+
 export default TeacherDashboard;

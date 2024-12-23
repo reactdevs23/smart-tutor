@@ -2,9 +2,7 @@
 
 import React, { useState } from "react";
 import classes from "./LoginForm.module.css";
-
 import { Button, Dropdown, Heading, Input, Text } from "@/components/common";
-
 import { FcGoogle } from "react-icons/fc";
 import { FaApple, FaFacebook } from "react-icons/fa";
 import { categories } from "@/common";
@@ -13,10 +11,39 @@ import Link from "next/link";
 
 const LoginForm = () => {
   const [email, setEmail] = useState("");
-
   const [password, setPassword] = useState("");
   const [showDropdown, setShowDropdown] = useState(false);
   const [selectedCategory, setSelectedCategory] = useState("Teacher");
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState("");
+
+  // Mock API integration function
+  const handleLogin = async (e) => {
+    e.preventDefault();
+    setIsLoading(true);
+    setError("");
+
+    try {
+      const response = await fetch("/api/login", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email, password, category: selectedCategory }),
+      });
+
+      if (!response.ok) {
+        throw new Error("Failed to log in. Please check your credentials.");
+      }
+
+      const data = await response.json();
+      console.log("Login successful:", data);
+      // Handle successful login (e.g., redirect, save token)
+    } catch (err) {
+      setError(err.message || "Something went wrong.");
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
   return (
     <div className={classes.formContainer}>
       <div className={classes.header}>
@@ -27,13 +54,13 @@ const LoginForm = () => {
           Access the SmartTutors admin panel using your email and passcode.
         </Text>
       </div>
-      <form className={classes.inputWrapper}>
+      <form className={classes.inputWrapper} onSubmit={handleLogin}>
         <Input
           type="email"
           label="Email"
           value={email}
           setValue={setEmail}
-          placeholder="Email "
+          placeholder="Email"
         />
         <Input
           label="Password"
@@ -50,17 +77,19 @@ const LoginForm = () => {
           selectedValue={selectedCategory}
           onSelect={(val) => setSelectedCategory(val)}
         />
+        {error && (
+          <Text error sm className={classes.errorMessage}>
+            {error}
+          </Text>
+        )}
         <Button
           btnPrimary
           base
-          to="/forgot-password"
-          transparent
-          className={classes.forgotPasword}
+          type="submit"
+          disabled={isLoading}
+          className={classes.submitButton}
         >
-          Forgot Password
-        </Button>
-        <Button wFull base to="/sign-up">
-          Log In
+          {isLoading ? "Logging in..." : "Log In"}
         </Button>
       </form>
       <Text primitive600 sm className={classes.or} textCenter>
@@ -69,16 +98,16 @@ const LoginForm = () => {
       <div className={classes.buttonContainer}>
         <Button primitive50 base>
           <FcGoogle className={classes.logo} /> Use Google
-        </Button>{" "}
+        </Button>
         <Button primitive50 base>
           <FaApple className={clsx(classes.logo, classes.appleLogo)} /> Use
           Apple
         </Button>
         <Button primitive50 base className={classes.fbButton}>
           <FaFacebook className={clsx(classes.logo, classes.fbLogo)} /> Use
-          Apple
+          Facebook
         </Button>
-      </div>{" "}
+      </div>
       <Text xs primitive600 className={classes.needAnAccount}>
         Don't have an account?
         <Link className={classes.link} href="/sign-up">

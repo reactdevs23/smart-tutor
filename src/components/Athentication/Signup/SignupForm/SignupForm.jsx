@@ -13,10 +13,52 @@ import Link from "next/link";
 const SignupForm = ({ setStep }) => {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
-
   const [password, setPassword] = useState("");
   const [showDropdown, setShowDropdown] = useState(false);
   const [selectedCategory, setSelectedCategory] = useState("Teacher");
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState("");
+
+  // Handle form submission
+  const handleSignup = async (e) => {
+    e.preventDefault();
+    setIsLoading(true);
+    setError("");
+
+    // Basic validation
+    if (!name || !email || !password) {
+      setError("All fields are required.");
+      setIsLoading(false);
+      return;
+    }
+
+    try {
+      const response = await fetch("/api/signup", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          name,
+          email,
+          password,
+          category: selectedCategory,
+        }),
+      });
+
+      if (!response.ok) {
+        throw new Error("Signup failed. Please try again.");
+      }
+
+      const data = await response.json();
+      console.log("Signup successful:", data);
+      // Proceed to the next step
+      setStep((prev) => prev + 1);
+    } catch (err) {
+      setError(err.message || "Something went wrong.");
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
   return (
     <div className={classes.formContainer}>
       <div className={classes.header}>
@@ -24,24 +66,24 @@ const SignupForm = ({ setStep }) => {
           Sign Up
         </Heading>
         <Text base semiBold primitive600 className={classes.needAnAccount}>
-          To Access the SmartTutors admin panel Register with following
-          information
+          To access the SmartTutors admin panel, register with the following
+          information.
         </Text>
       </div>
-      <form className={classes.inputWrapper}>
+      <form className={classes.inputWrapper} onSubmit={handleSignup}>
         <Input
           type="text"
           label="Name"
           value={name}
           setValue={setName}
-          placeholder="Name "
+          placeholder="Name"
         />
         <Input
           type="email"
           label="Email"
           value={email}
           setValue={setEmail}
-          placeholder="Email "
+          placeholder="Email"
         />
         <Input
           label="Password"
@@ -58,13 +100,19 @@ const SignupForm = ({ setStep }) => {
           selectedValue={selectedCategory}
           onSelect={(val) => setSelectedCategory(val)}
         />
+        {error && (
+          <Text error sm className={classes.errorMessage}>
+            {error}
+          </Text>
+        )}
         <Button
           wFull
           base
-          to="/sign-up"
-          onClick={() => setStep((prev) => prev + 1)}
+          type="submit"
+          disabled={isLoading}
+          className={classes.submitButton}
         >
-          Sign up
+          {isLoading ? "Signing up..." : "Sign Up"}
         </Button>
       </form>
       <Text primitive600 sm className={classes.or} textCenter>
@@ -73,16 +121,16 @@ const SignupForm = ({ setStep }) => {
       <div className={classes.buttonContainer}>
         <Button primitive50 base>
           <FcGoogle className={classes.logo} /> Use Google
-        </Button>{" "}
+        </Button>
         <Button primitive50 base>
           <FaApple className={clsx(classes.logo, classes.appleLogo)} /> Use
           Apple
         </Button>
         <Button primitive50 base className={classes.fbButton}>
           <FaFacebook className={clsx(classes.logo, classes.fbLogo)} /> Use
-          Apple
+          Facebook
         </Button>
-      </div>{" "}
+      </div>
       <Text xs primitive600 className={classes.needAnAccount}>
         Already have an account?
         <Link className={classes.link} href="/login">
