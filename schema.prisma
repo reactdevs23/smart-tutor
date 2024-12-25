@@ -1,0 +1,65 @@
+generator client {
+    provider        = "prisma-client-js"
+    previewFeatures = ["fullTextSearch", "fullTextIndex"]
+}
+
+datasource db {
+    provider = "postgresql"
+    url      = env("POSTGRES_PRISMA_URL")
+}
+
+model Student {
+    id              String    @id @default(cuid())
+    name            String
+    email           String
+    description     String?
+    profile_picture String?
+    curriculum_type String?
+    subjects        Json?
+    class           String?
+    password        String?
+    created_at      DateTime  @default(now())
+    updated_at      DateTime? @updatedAt()
+    is_verified     Boolean   @default(false)
+
+    @@map("students")
+}
+
+model Teacher {
+    id              String    @id @default(cuid())
+    name            String
+    email           String
+    description     String?
+    profile_picture String?
+    curriculum_type String?
+    salary          Int?
+    subjects        Json?
+    classes         Json?
+    password        String?
+    created_at      DateTime  @default(now())
+    updated_at      DateTime? @updatedAt()
+    availibility    Boolean   @default(false)
+    is_verified     Boolean   @default(false)
+
+    @@map("teachers")
+}
+
+model Admin {
+    id              String  @id @default(cuid())
+    name            String
+    email           String
+    description     String?
+    profile_picture String?
+    password        String?
+    is_verified     Boolean @default(false)
+
+    @@map("admin_users")
+}
+
+model ResetPassword {
+    id    String  @id @default(cuid())
+    code  Int?
+    email String?
+
+    @@map("reset_password_requests")
+}

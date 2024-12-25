@@ -4,8 +4,8 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { IoIosArrowUp, IoIosArrowDown, IoMdClose } from "react-icons/io";
 import { AiOutlineAlignRight } from "react-icons/ai";
-import { Button, Dropdown, Text } from "@/components/common";
-import { authenticationImg, logo } from "@/images";
+import { Button, Dropdown, Text } from "@/src/components/common";
+import { authenticationImg, logo } from "@/src/images";
 import clsx from "clsx";
 import classes from "./Navbar.module.css";
 

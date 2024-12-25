@@ -1,10 +1,8 @@
 {
   "compilerOptions": {
-    "baseUrl": "./",
     "paths": {
-      "@/*": ["src/*"]
+      "@/*": ["./*", "./src/*"]
     },
-
     "target": "ES2017",
     "lib": ["dom", "dom.iterable", "esnext"],
     "allowJs": true,
@@ -25,6 +23,6 @@
     ],
     "strictNullChecks": true
   },
-  "include": ["next-env.d.ts", ".next/types/**/*.ts", "**/*.ts", "**/*.tsx"],
+  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts", "src/app/auth/[...nextauth]", "src/app/layout.js"],
   "exclude": ["node_modules"]
 }
