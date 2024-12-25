@@ -12,3 +12,17 @@ export const success = (response: any, status?: number, message?: string) => {
     }
     return res;
 }
+
+export const error = (message?: string, status?: number) => {
+    let res = {
+        message: "Success",
+        status: 400,
+    }
+    if (status) {
+        res.status = status;
+    }
+    if (message) {
+        res.message = message;
+    }
+    return res;
+}

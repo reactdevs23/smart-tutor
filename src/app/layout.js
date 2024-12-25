@@ -10,8 +10,8 @@ export default function RootLayout({ children }) {
         suppressHydrationWarning
       >
         {/* <SessionProvider> */}
-          <Navbar />
-          {children}
+        <Navbar />
+        {children}
         {/* </SessionProvider> */}
       </body>
     </html>
