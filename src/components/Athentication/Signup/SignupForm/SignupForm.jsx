@@ -16,47 +16,11 @@ const SignupForm = ({ setStep }) => {
   const [password, setPassword] = useState("");
   const [showDropdown, setShowDropdown] = useState(false);
   const [selectedCategory, setSelectedCategory] = useState("Teacher");
-  const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState("");
 
   // Handle form submission
   const handleSignup = async (e) => {
     e.preventDefault();
-    setIsLoading(true);
-    setError("");
-
-    // Basic validation
-    if (!name || !email || !password) {
-      setError("All fields are required.");
-      setIsLoading(false);
-      return;
-    }
-
-    try {
-      const response = await fetch("/api/signup", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          name,
-          email,
-          password,
-          category: selectedCategory,
-        }),
-      });
-
-      if (!response.ok) {
-        throw new Error("Signup failed. Please try again.");
-      }
-
-      const data = await response.json();
-      console.log("Signup successful:", data);
-      // Proceed to the next step
-      setStep((prev) => prev + 1);
-    } catch (err) {
-      setError(err.message || "Something went wrong.");
-    } finally {
-      setIsLoading(false);
-    }
+    setStep((prev) => prev + 1);
   };
 
   return (
@@ -100,19 +64,9 @@ const SignupForm = ({ setStep }) => {
           selectedValue={selectedCategory}
           onSelect={(val) => setSelectedCategory(val)}
         />
-        {error && (
-          <Text error sm className={classes.errorMessage}>
-            {error}
-          </Text>
-        )}
-        <Button
-          wFull
-          base
-          type="submit"
-          disabled={isLoading}
-          className={classes.submitButton}
-        >
-          {isLoading ? "Signing up..." : "Sign Up"}
+
+        <Button wFull base type="submit" className={classes.submitButton}>
+          Sign Up
         </Button>
       </form>
       <Text primitive600 sm className={classes.or} textCenter>

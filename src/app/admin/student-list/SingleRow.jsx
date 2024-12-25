@@ -7,7 +7,7 @@ import { IoIosMore } from "react-icons/io";
 import Modal from "@/components/common/Modal/Modal";
 import AreYouSure from "@/components/Modal/AreYouSure/AreYouSure";
 import Successfull from "@/components/Modal/Successfull/Successfull";
-import EditingModal from "@/components/Modal/Teacher/Student/EditingModal/EditingModal";
+import EditingModal from "@/components/Modal/Student/EditingModal/EditingModal";
 const actionsName = ["edit", "delete"];
 
 const SingleRow = ({

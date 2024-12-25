@@ -188,6 +188,7 @@ const TeacherDashboard = () => {
           setSelected={setClassLists}
           label="Select Class"
           name="classes"
+          allowMultiple
         />
       </div>
       <Button type="submit">Submit</Button>

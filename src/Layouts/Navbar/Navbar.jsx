@@ -9,7 +9,7 @@ import { authenticationImg, logo } from "@/images";
 import clsx from "clsx";
 import classes from "./Navbar.module.css";
 
-const Navbar = ({ primitive950 }) => {
+const Navbar = () => {
   // Define user roles and set initial state
   const loginAs = "admin"; // This should be dynamically set based on user authentication
   const [sidebar, setSidebar] = useState(false); // Sidebar toggle state
@@ -60,7 +60,6 @@ const Navbar = ({ primitive950 }) => {
   return (
     <div
       className={clsx(
-        primitive950 && classes.primitive950, // For custom primitive class if provided
         classes.wrapper,
         isScrolled && classes.wrapperBg // Adding background on scroll
       )}
@@ -73,19 +72,20 @@ const Navbar = ({ primitive950 }) => {
 
         {/* Navigation items */}
         <div className={clsx(classes.navItems, sidebar && classes.sidebar)}>
-          {navItems.map((el, i) => (
-            <Link
-              key={i}
-              href={el.to}
-              onClick={() => setSidebar(false)} // Close sidebar on navigation click
-              className={clsx(
-                classes.navItem,
-                pathname === el.to && classes.navActive // Highlight active nav item
-              )}
-            >
-              {el.navItem}
-            </Link>
-          ))}
+          {loggedIn &&
+            navItems.map((el, i) => (
+              <Link
+                key={i}
+                href={el.to}
+                onClick={() => setSidebar(false)} // Close sidebar on navigation click
+                className={clsx(
+                  classes.navItem,
+                  pathname === el.to && classes.navActive // Highlight active nav item
+                )}
+              >
+                {el.navItem}
+              </Link>
+            ))}
 
           {/* User authentication section (login/logout) */}
           <div className={classes.buttonContainer}>

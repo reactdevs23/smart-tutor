@@ -14,35 +14,9 @@ const LoginForm = () => {
   const [password, setPassword] = useState("");
   const [showDropdown, setShowDropdown] = useState(false);
   const [selectedCategory, setSelectedCategory] = useState("Teacher");
-  const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState("");
 
   // Mock API integration function
-  const handleLogin = async (e) => {
-    e.preventDefault();
-    setIsLoading(true);
-    setError("");
-
-    try {
-      const response = await fetch("/api/login", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email, password, category: selectedCategory }),
-      });
-
-      if (!response.ok) {
-        throw new Error("Failed to log in. Please check your credentials.");
-      }
-
-      const data = await response.json();
-      console.log("Login successful:", data);
-      // Handle successful login (e.g., redirect, save token)
-    } catch (err) {
-      setError(err.message || "Something went wrong.");
-    } finally {
-      setIsLoading(false);
-    }
-  };
+  const handleLogin = async (e) => {};
 
   return (
     <div className={classes.formContainer}>
@@ -84,19 +58,8 @@ const LoginForm = () => {
         >
           Forgot Password
         </Button>
-        {error && (
-          <Text error sm className={classes.errorMessage}>
-            {error}
-          </Text>
-        )}
-        <Button
-          btnPrimary
-          base
-          type="submit"
-          disabled={isLoading}
-          className={classes.submitButton}
-        >
-          {isLoading ? "Logging in..." : "Log In"}
+        <Button btnPrimary base type="submit" className={classes.submitButton}>
+          Login
         </Button>{" "}
       </form>
       <Text primitive600 sm className={classes.or} textCenter>

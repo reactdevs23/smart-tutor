@@ -35,8 +35,8 @@ const EditingModal = ({
 
   const [description, setDescription] = useState(currentDescription);
   //upload img
-  const [selectedImage, setSelectedImage] = useState(null);
-  const [previewUrl, setPreviewUrl] = useState(currentImg);
+  const [selectedImage, setSelectedImage] = useState(currentImg);
+  const [previewUrl, setPreviewUrl] = useState();
 
   const handleImageChange = (event) => {
     const { value, checked } = event.target;
