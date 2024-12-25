@@ -13,8 +13,3 @@ export const patch = (url: string) => {
     const res = axios.get(url);
     return res;
 }
-
-export const remove = (url: string) => {
-    const res = axios.get(url);
-    return res;
-}
