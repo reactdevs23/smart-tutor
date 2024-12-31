@@ -1,10 +1,7 @@
+import sendMail from '@/lib/email';
 import { ecryptPassword } from '@/lib/hash';
 import prisma from '@/lib/prisma';
 import { error, success } from '@/lib/response.helper';
-
-const GET = (request: any) => {
-    return Response.json({ success: true })
-}
 
 const POST = async (request: any) => {
     const requestData = await request?.json();
@@ -26,8 +23,14 @@ const POST = async (request: any) => {
         Response.error();
     }
 
+    sendMail(student.email, "Verify Student",
+        `
+            <div>Mehedi</div>
+        `
+    )
+
     delete student['password' as string];
     return Response.json(success(student));
 }
 
-export { GET, POST };
+export { POST };
