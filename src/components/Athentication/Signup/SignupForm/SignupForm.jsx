@@ -3,24 +3,39 @@ import React, { useState } from "react";
 import classes from "./SignupForm.module.css";
 
 import { Button, Dropdown, Heading, Input, Text } from "@/components/common";
-
+import { post } from "@/lib/api";
 import { FcGoogle } from "react-icons/fc";
 import { FaApple, FaFacebook } from "react-icons/fa";
 import clsx from "clsx";
-import { categories } from "@/common";
 import Link from "next/link";
+import { ROLES } from "../../../../../lib/constant";
 
 const SignupForm = ({ setStep }) => {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [showDropdown, setShowDropdown] = useState(false);
-  const [selectedCategory, setSelectedCategory] = useState("Teacher");
+  const [selectedRole, setSelectedRole] = useState("admin"); // Default role
 
-  // Handle form submission
   const handleSignup = async (e) => {
     e.preventDefault();
-    setStep((prev) => prev + 1);
+
+    try {
+      const response = await post(
+        `api/${selectedRole.toLowerCase()}/auth/signup`,
+        {
+          name: name,
+          email: email,
+          password: password,
+        }
+      );
+
+      console.log("Signup successful");
+      setStep((prev) => prev + 1);
+    } catch (error) {
+      console.error("Signup failed:", error.response?.data || error.message);
+      alert("Signup failed. Please try again.");
+    }
   };
 
   return (
@@ -57,12 +72,12 @@ const SignupForm = ({ setStep }) => {
           placeholder="Password"
         />
         <Dropdown
-          label="Select Category"
-          items={categories}
+          label="Select Role"
+          items={Object.values(ROLES)}
           isActive={showDropdown}
           setIsActive={setShowDropdown}
-          selectedValue={selectedCategory}
-          onSelect={(val) => setSelectedCategory(val)}
+          selectedValue={selectedRole}
+          onSelect={(val) => setSelectedRole(val)}
         />
 
         <Button wFull base type="submit" className={classes.submitButton}>

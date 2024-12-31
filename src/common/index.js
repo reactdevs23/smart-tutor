@@ -1,1 +1,1 @@
-export const categories = ["Teacher", "Student", "Admin"];
+export const roles = ["teacher", "student", "admin"];

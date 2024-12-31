@@ -8,22 +8,22 @@ import { Button, Dropdown, Text } from "@/src/components/common";
 import { authenticationImg, logo } from "@/src/images";
 import clsx from "clsx";
 import classes from "./Navbar.module.css";
+import { ROLES } from "@/lib/constant";
 
 const Navbar = () => {
-  // Define user roles and set initial state
-  const loginAs = "admin"; // This should be dynamically set based on user authentication
-  const [sidebar, setSidebar] = useState(false); // Sidebar toggle state
-  const [isScrolled, setIsScrolled] = useState(false); // Scroll state
-  const [loggedIn, setLoggedIn] = useState(false); // Logged-in state
-  const [showDropdown, setShowDropdown] = useState(false); // Dropdown menu visibility state
-  const pathname = usePathname(); // For tracking the current path for active nav items
+  const [sidebar, setSidebar] = useState(false);
+  const [isScrolled, setIsScrolled] = useState(false);
 
-  // Handle page scroll event to change navbar style
+  const [showDropdown, setShowDropdown] = useState(false);
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [userRole, setUserRole] = useState("");
+  const [userName, setUserName] = useState("");
+  const pathname = usePathname();
+
   const handleScroll = () => {
-    setIsScrolled(window.scrollY > 90); // Set navbar background when scrolled down
+    setIsScrolled(window.scrollY > 90);
   };
 
-  // Adding scroll event listener on mount and cleanup on unmount
   useEffect(() => {
     window.addEventListener("scroll", handleScroll);
     return () => {
@@ -49,14 +49,34 @@ const Navbar = () => {
 
   // Dynamically set the nav items based on user role
   const navItems =
-    loginAs === "admin"
+    userRole === ROLES.ADMIN
       ? adminNavItems
-      : loginAs === "student"
+      : userRole === ROLES.STUDENT
       ? studentNavItems
-      : loginAs === "teachers"
+      : userRole === ROLES.TEACHER
       ? teachersNavItems
       : [];
 
+  useEffect(() => {
+    const userToken = localStorage.getItem("userToken");
+    const role = localStorage.getItem("userRole");
+    const userName = localStorage.getItem("userName"); // Get the user name from localStorage
+
+    if (userToken && role && userName) {
+      setIsLoggedIn(true);
+      setUserRole(role);
+      setUserName(userName); // Set the user name state
+    } else {
+      setIsLoggedIn(false);
+    }
+  }, []);
+
+  const handleLogout = () => {
+    localStorage.removeItem("userToken");
+    localStorage.removeItem("userRole");
+    setIsLoggedIn(false);
+    window.location.href = "/";
+  };
   return (
     <div
       className={clsx(
@@ -72,7 +92,7 @@ const Navbar = () => {
 
         {/* Navigation items */}
         <div className={clsx(classes.navItems, sidebar && classes.sidebar)}>
-          {loggedIn &&
+          {isLoggedIn &&
             navItems.map((el, i) => (
               <Link
                 key={i}
@@ -89,13 +109,13 @@ const Navbar = () => {
 
           {/* User authentication section (login/logout) */}
           <div className={classes.buttonContainer}>
-            {loggedIn ? (
+            {isLoggedIn ? (
               <Dropdown
                 type2
                 items={["Logout"]}
                 isActive={showDropdown}
                 setIsActive={setShowDropdown}
-                onSelect={() => setLoggedIn(false)} // Handle logout action
+                onSelect={handleLogout} // Handle logout action
               >
                 <div className={classes.userContainer}>
                   <img
@@ -105,10 +125,10 @@ const Navbar = () => {
                   />
                   <div>
                     <Text sm font600>
-                      Dalim Kumar
+                      {userName}
                     </Text>
                     <Text xs className={classes.loginAs}>
-                      {loginAs} {/* Display role (admin, student, etc.) */}
+                      {userRole} {/* Display role (admin, student, etc.) */}
                     </Text>
                   </div>
                   {showDropdown ? (
