@@ -6,27 +6,28 @@ import { FcGoogle } from "react-icons/fc";
 import { FaApple, FaFacebook } from "react-icons/fa";
 import clsx from "clsx";
 import Link from "next/link";
-import axios from "axios";
-import { ROLES } from "../../../../lib/constant";
 
+import { ROLES } from "../../../../lib/constant";
+import { post } from "../../../../lib/api";
 const LoginForm = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [showDropdown, setShowDropdown] = useState(false);
   const [selectedRole, setSelectedRole] = useState("Teacher");
 
-  useEffect(() => {
-    // const userToken = localStorage.getItem("userToken");
-    // if (userToken) {
-    //   // If token exists, redirect to another page (e.g., dashboard)
-    //   window.location.href = "/dashboard"; // Change this to your desired route
-    // }
-  }, []);
+  // useEffect(() => {
+  //   const userData = JSON.parse(localStorage.getItem("userData"));
+  //   console.log(userData.token);
+  //   if (userData.token) {
+  //     // If token exists, redirect to another page (e.g., dashboard)
+  //     window.location.href = "/dashboard"; // Change this to your desired route
+  //   }
+  // }, []);
 
   const handleSignIn = async (e) => {
     e.preventDefault();
     try {
-      const response = await axios.post(
+      const response = await post(
         `/api/${selectedRole.toLocaleLowerCase()}/auth/signin`,
         {
           email,
@@ -35,15 +36,13 @@ const LoginForm = () => {
       );
 
       if (response.data.status === 200) {
-        console.log("Sign in successful:", response.data);
+        console.log("Sign in successful:", response.data.data);
 
         // Save the token, role, and name to localStorage
-        localStorage.setItem("userToken", response.data.data.token);
-        localStorage.setItem("userRole", response.data.data.role);
-        localStorage.setItem("userName", response.data.data.name);
+        localStorage.setItem("userData", JSON.stringify(response.data.data));
 
         // Redirect the user
-        window.location.href = "/dashboard";
+        window.location.href = "/";
       } else {
         console.error("Unexpected response:", response);
         alert("Sign-in Unsuccessful!");

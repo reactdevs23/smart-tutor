@@ -81,6 +81,7 @@
 }
 .userImg {
   max-width: 36px;
+
   border-radius: 50%;
   aspect-ratio: 1/1;
   object-fit: cover;
@@ -89,6 +90,7 @@
 }
 .loginAs {
   text-transform: capitalize;
+  font-weight: 600;
 }
 .downArrow,
 .upArrow {

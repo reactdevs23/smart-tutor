@@ -18,6 +18,7 @@ const Navbar = () => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [userRole, setUserRole] = useState("");
   const [userName, setUserName] = useState("");
+  const [userImg, setUserImg] = useState("");
   const pathname = usePathname();
 
   const handleScroll = () => {
@@ -58,25 +59,26 @@ const Navbar = () => {
       : [];
 
   useEffect(() => {
-    const userToken = localStorage.getItem("userToken");
-    const role = localStorage.getItem("userRole");
-    const userName = localStorage.getItem("userName"); // Get the user name from localStorage
+    const userData = JSON.parse(localStorage.getItem("userData"));
 
-    if (userToken && role && userName) {
+    console.log(`role ${userData}`);
+    if (userData) {
       setIsLoggedIn(true);
-      setUserRole(role);
-      setUserName(userName); // Set the user name state
+      setUserRole(userData?.role);
+      setUserName(userData?.name);
+      setUserImg(userData?.propfile_picture);
     } else {
       setIsLoggedIn(false);
     }
   }, []);
 
   const handleLogout = () => {
-    localStorage.removeItem("userToken");
-    localStorage.removeItem("userRole");
+    localStorage.removeItem("userData");
+
     setIsLoggedIn(false);
-    window.location.href = "/";
+    window.location.href = "/login";
   };
+
   return (
     <div
       className={clsx(
@@ -119,7 +121,7 @@ const Navbar = () => {
               >
                 <div className={classes.userContainer}>
                   <img
-                    src={authenticationImg.src}
+                    src={userImg ? userImg : authenticationImg.src}
                     alt="User"
                     className={classes.userImg}
                   />

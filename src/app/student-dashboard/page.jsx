@@ -9,21 +9,36 @@ import {
   Input as TextArea,
 } from "@/components/common";
 import classes from "./StudentDashboard.module.css";
-import { useState } from "react";
-
+import { useState, useEffect } from "react";
+import { patch } from "../../../lib/api";
 import { banner, uploadImg } from "@/images";
 import clsx from "clsx";
 
-// Dummy API function (for now)
-const submitStudentData = async (studentData) => {
-  console.log("Student Data Submitted:", studentData);
-  // Simulate a delay for the API call
-  return new Promise((resolve) => setTimeout(resolve, 2000));
-};
-
+// Constants for available options
 const mediums = ["Bangla", "English", "Religious Studies"];
 const subjectList = ["Bangla", "English", "Physics", "Chemistry"];
 const allclasses = ["class 8", "class 9", "class 10", "HSC-1st year"];
+
+// Function to handle updating student data
+const updateStudentData = async (id, updatedData) => {
+  try {
+    console.log("Sending PATCH request with data:", updatedData);
+    const response = await patch(`/api/student/${id}`, updatedData);
+
+    console.log("Response from API:", response);
+
+    if (response.status !== 200) {
+      throw new Error(
+        `Failed to update student data. Status: ${response.status}`
+      );
+    }
+
+    return response?.data?.data;
+  } catch (error) {
+    console.error("Error updating student data:", error); // Log error
+    throw error;
+  }
+};
 
 const StudentDashboard = () => {
   const [name, setName] = useState("");
@@ -34,14 +49,32 @@ const StudentDashboard = () => {
   const [medium, setMedium] = useState("");
   const [subjects, setSubjects] = useState([]);
   const [myClassName, setMyClassName] = useState("");
+  const [studentId, setStudentId] = useState("");
+  const [profile_picture, setProfilePicture] = useState(null); // Use profile_picture
 
-  // Handle image selection
+  // Load data from localStorage on mount
+
+  useEffect(() => {
+    const storedData = localStorage.getItem("userData");
+    if (storedData) {
+      const parsedData = JSON.parse(storedData);
+      setStudentId(parsedData.id || ""); // Get student ID from localStorage
+      setName(parsedData.name || "");
+      setEmail(parsedData.email || "");
+      setDescription(parsedData.description || "");
+      setMyClassName(parsedData.class || "");
+      setMedium(parsedData.curriculum_type || "");
+      setSubjects(parsedData.subjects || []);
+      setProfilePicture(parsedData.profile_picture || null); // Load profile_picture from localStorage
+    }
+  }, []);
+
+  // Convert image file to base64
   const handleImageChange = (event) => {
     const file = event.target.files[0];
+    if (!file) return;
 
-    if (!file) {
-      return;
-    }
+    console.log("Selected file:", file); // Debugging - check the file selected
 
     if (file.size > 10485760) {
       alert("File size exceeds 10MB. Please select a smaller file.");
@@ -53,36 +86,61 @@ const StudentDashboard = () => {
       return;
     }
 
-    setSelectedImage(file);
-    setPreviewUrl(URL.createObjectURL(file));
+    // Convert to base64 string
+    const reader = new FileReader();
+
+    reader.onloadend = () => {
+      console.log("Image preview URL (base64):", reader.result); // Debugging - check base64 result
+      setProfilePicture(reader.result); // Set base64 image string
+      setPreviewUrl(reader.result); // Set image preview
+    };
+    reader.readAsDataURL(file);
   };
 
-  // Handle form submission (no API for now, just simulate with console log)
+  // Handle form submission
   const handleSubmit = async (event) => {
     event.preventDefault();
 
-    const studentData = {
+    console.log("Profile Picture before submit:", profile_picture);
+    const updatedData = {
       name,
       email,
       description,
-      image: selectedImage,
-      medium,
+      curriculum_type: medium,
       subjects,
       class: myClassName,
+      profile_picture,
     };
 
+    console.log("Updated Data (before submission):", updatedData); // Debugging
+
     try {
-      // Simulate API call
-      await submitStudentData(studentData);
-      alert("Student data submitted successfully!");
+      // Make PATCH API call
+      const updatedResponse = await updateStudentData(studentId, updatedData);
+      console.log("Updated Response:", updatedResponse); // Check API response
+
+      // Update localStorage with the new data
+      const updatedLocalStorageData = {
+        ...JSON.parse(localStorage.getItem("userData") || "{}"),
+        ...updatedResponse, // Use response from API as the latest data
+      };
+
+      console.log("updated data", updatedLocalStorageData);
+      localStorage.setItem("userData", JSON.stringify(updatedLocalStorageData));
+
+      // Show success message
+      alert("Student data updated successfully!");
     } catch (error) {
-      console.error("Error submitting data:", error);
-      alert("There was an error submitting your data.");
+      console.error("Error updating data:", error); // Log the error
+      alert("There was an error updating your data.");
     }
   };
 
   return (
-    <section className={clsx(classes.wrapper, "container")}>
+    <form
+      className={clsx(classes.wrapper, "container")}
+      onSubmit={handleSubmit}
+    >
       <div className={classes.bannerContainer}>
         <img src={banner.src} alt="#" className={classes.banner} />
       </div>
@@ -90,7 +148,7 @@ const StudentDashboard = () => {
         heading="Your Info"
         info="Find the right students in your areas"
       />
-      <form className={classes.inputWrapper} onSubmit={handleSubmit}>
+      <div className={classes.inputWrapper}>
         <Input
           name="name"
           type="text"
@@ -98,8 +156,10 @@ const StudentDashboard = () => {
           value={name}
           setValue={setName}
           placeholder="Enter your full name"
+          readonly
         />
         <Input
+          readonly
           name="email"
           type="email"
           label="Email"
@@ -116,7 +176,8 @@ const StudentDashboard = () => {
           setValue={setDescription}
           placeholder="Enter your Description"
         />
-      </form>
+      </div>
+
       <div className={classes.uploadImgContainer}>
         {previewUrl && (
           <div className={classes.preview}>
@@ -145,6 +206,7 @@ const StudentDashboard = () => {
           className={classes.imgInput}
         />
       </div>
+
       <div className={classes.multipleChoice}>
         <MultipleChoice
           options={mediums}
@@ -169,8 +231,9 @@ const StudentDashboard = () => {
           name="classes"
         />
       </div>
+
       <Button type="submit">Submit</Button>
-    </section>
+    </form>
   );
 };
 
