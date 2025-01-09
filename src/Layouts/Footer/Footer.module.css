@@ -1,5 +1,5 @@
 .wrapper {
-  background: var(--Primitive-950);
+  background: #000f15;
 }
 .container {
   display: grid;
@@ -7,6 +7,7 @@
 
   gap: 96px;
   padding: 64px 0;
+  padding-bottom: 0;
 }
 .infoContainer {
   display: flex;
@@ -14,6 +15,11 @@
   gap: 28px;
   max-width: 327px;
   width: 100%;
+}
+.logo {
+  max-width: 220px;
+  width: 100%;
+  display: block;
 }
 .socialContainer {
   display: flex;
@@ -33,7 +39,7 @@
 .link {
   color: var(--Primitive-200);
 
-  font-size: 20px;
+  font-size: 16px;
   font-style: normal;
   font-weight: 500;
   line-height: 140%;
@@ -57,10 +63,7 @@
   display: flex;
   justify-content: center;
 }
-.logo {
-  max-width: 32px;
-  width: 100%;
-}
+
 .policyAndCondition {
   display: flex;
   justify-content: flex-end;
@@ -90,6 +93,9 @@
   .logoContainer {
     order: -1;
   }
+  .logo {
+    max-width: 180px;
+  }
   .policyAndCondition {
     justify-content: center;
   }
@@ -112,8 +118,5 @@
   }
   .infoContainer {
     grid-column: span 1;
-  }
-  .link {
-    font-size: 18px;
   }
 }

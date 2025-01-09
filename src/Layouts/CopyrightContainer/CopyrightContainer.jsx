@@ -1,15 +1,15 @@
 import React from "react";
 import classes from "./CopyrightContainer.module.css";
 
-import { Text } from "components/common";
 import clsx from "clsx";
+import { Text } from "@/components/common";
 const CopyrightContainer = () => {
   return (
     <div className={classes.wrapper}>
       {" "}
       <div className={clsx(classes.copyRightContainer, "container")}>
         <Text base primitive200 className={classes.copyRight}>
-          © 2020-2024 - <span className={classes.brandName}>Brandname</span>
+          © 2024 - <span className={classes.brandName}>Smart Tutor</span>
         </Text>
         <div className={classes.logoContainer}>
           {/* <img src={smallLogo} alt="#" className={classes.logo} /> */}
