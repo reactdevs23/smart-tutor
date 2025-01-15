@@ -2,14 +2,14 @@ import React from "react";
 import classes from "./Successfull.module.css";
 
 import { Button, Heading, Text } from "@/components/common";
-import { authenticationImg } from "@/images";
+import { checkEmailImg } from "@/images";
 import Modal from "../../common/Modal/Modal";
 const Successfull = ({ heading, info, onBack, isActive, onClose, to, img }) => {
   return (
     <Modal isActive={isActive} onClose={onClose} heading="Success" sm>
       <div className={classes.wrapper}>
         <img
-          src={img ? img.src : authenticationImg.src}
+          src={img ? img.src : checkEmailImg.src}
           alt="#"
           className={classes.img}
         />

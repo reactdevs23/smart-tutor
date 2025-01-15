@@ -17,6 +17,7 @@ import australia from "./australia.png";
 import uk from "./uk.png";
 import usa from "./usa.png";
 import ourSystem from "./ourSystem.png";
+import messageIcon from "./message.png";
 export {
   logo,
   //authentication
@@ -37,4 +38,5 @@ export {
   usa,
   ourSystem,
   logo2,
+  messageIcon,
 };

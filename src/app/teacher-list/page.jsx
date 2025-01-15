@@ -2,7 +2,7 @@ import clsx from "clsx";
 import classes from "./TeacherLists.module.css";
 
 import { Heading, Text } from "@/components/common";
-import { banner } from "@/images";
+import { banner, messageIcon } from "@/images";
 import Header from "@/components/Athentication/Header/Header";
 
 const TeacherLists = () => {
@@ -70,18 +70,26 @@ const TeacherLists = () => {
               <img src={el.img.src} alt="#" className={classes.img} />
             </div>
             <div className={classes.infoContainer}>
-              <Heading bold lg>
-                {el.name}
-              </Heading>
+              <div className={classes.header}>
+                <Heading bold lg>
+                  {el.name}
+                </Heading>
+                <a href={`mailto:${el.email}`}>
+                  <img src={messageIcon.src} alt="#" className={classes.icon} />
+                </a>
+              </div>
               <Text xs>{el.details}</Text>
               <div className={classes.list}>
                 <div className={classes.subjectList}>
                   <Heading sm bold>
                     Subjct List
                   </Heading>
+
                   <ul className={classes.listContainer}>
                     {el.subjects.map((subject, i) => (
-                      <li key={i}>{subject}</li>
+                      <li key={i} className={classes.item}>
+                        {subject}
+                      </li>
                     ))}
                   </ul>
                 </div>{" "}
@@ -91,17 +99,20 @@ const TeacherLists = () => {
                   </Heading>
                   <ul className={classes.listContainer}>
                     {el.classList.map((subject, i) => (
-                      <li key={i}>{subject}</li>
+                      <li key={i} className={classes.item}>
+                        {subject}
+                      </li>
                     ))}
                   </ul>
                 </div>
+              </div>{" "}
+              <div className={classes.footer}>
                 <Heading primitive800 sm bold>
                   Sallary:
                   {el.sallary}
-                </Heading>{" "}
+                </Heading>
                 <Heading primitive800 sm bold>
-                  Email:
-                  {el.email}
+                  {el.availability ? "Available" : "Not Available"}
                 </Heading>
               </div>
             </div>
