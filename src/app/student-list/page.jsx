@@ -49,7 +49,9 @@ const StuedentList = () => {
                   Subjct List
                 </Heading>
                 {el.subjects.map((subject, i) => (
-                  <li key={i}>{subject}</li>
+                  <li key={i} className={classes.list}>
+                    {subject}
+                  </li>
                 ))}
               </div>{" "}
               <div className={classes.subjectList}>

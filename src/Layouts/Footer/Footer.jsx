@@ -1,7 +1,7 @@
 import React from "react";
 import classes from "./Footer.module.css";
 import clsx from "clsx";
-import { Text } from "components/common";
+
 import { TbBrandTelegram } from "react-icons/tb";
 
 import {
@@ -11,9 +11,10 @@ import {
   RiTiktokLine,
   RiInstagramLine,
 } from "react-icons/ri";
-import { Link } from "react-router-dom";
-
-import CopyrightContainer from "Layout/CopyrightContainer/CopyrightContainer";
+import Link from "next/link";
+import { Heading, Text } from "@/components/common";
+import CopyrightContainer from "../CopyrightContainer/CopyrightContainer";
+import { logo2 } from "@/images";
 
 const Footer = () => {
   const socialMedia = [
@@ -52,9 +53,10 @@ const Footer = () => {
     <section className={classes.wrapper}>
       <footer className={clsx(classes.container, "container")}>
         <div className={classes.infoContainer}>
+          <img src={logo2.src} alt="#" className={classes.logo} />
           <Text primitive300 xl>
-            Whether you're a seasoned investor or just starting, our flexible
-            deposit plans are designed to help you grow your wealth.
+            SmartTutor is a platform where parents, students and tutors can
+            easily connect with each other.
           </Text>
 
           <div className={classes.socialContainer}>
@@ -72,20 +74,26 @@ const Footer = () => {
           </div>
         </div>
         <div className={classes.itemsContainer}>
-          <Link to="/" className={classes.link}>
+          <Heading lg className={classes.heading} primitive0>
+            Resources
+          </Heading>
+          <Link href="/" className={classes.link}>
             About Us
           </Link>
-          <Link to="/" className={classes.link}>
-            How To Start
+          <Link href="/" className={classes.link}>
+            How href Start
           </Link>
-          <Link to="/" className={classes.link}>
+          <Link href="/" className={classes.link}>
             Get Membership
           </Link>{" "}
-          <Link to="/" className={classes.link}>
+          <Link href="/" className={classes.link}>
             Contact
           </Link>
         </div>
         <div className={classes.itemsContainer}>
+          <Heading lg className={classes.heading} primitive0>
+            More
+          </Heading>
           <a
             href="#/"
             target="_blank"
@@ -120,6 +128,9 @@ const Footer = () => {
           </a>
         </div>
         <div className={clsx(classes.infoContainer, classes.addressContainer)}>
+          <Heading lg className={classes.heading} primitive0>
+            Address
+          </Heading>
           <div>
             <a
               href="tel:+1 234 567 890"
@@ -143,6 +154,7 @@ const Footer = () => {
           </p>
         </div>
       </footer>
+      <CopyrightContainer />
     </section>
   );
 };

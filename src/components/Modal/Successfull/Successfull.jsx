@@ -2,13 +2,17 @@ import React from "react";
 import classes from "./Successfull.module.css";
 
 import { Button, Heading, Text } from "@/components/common";
-import { authenticationImg } from "@/images";
+import { checkEmailImg } from "@/images";
 import Modal from "../../common/Modal/Modal";
-const Successfull = ({ heading, info, onBack, isActive, onClose }) => {
+const Successfull = ({ heading, info, onBack, isActive, onClose, to, img }) => {
   return (
     <Modal isActive={isActive} onClose={onClose} heading="Success" sm>
       <div className={classes.wrapper}>
-        <img src={authenticationImg.src} alt="#" className={classes.img} />
+        <img
+          src={img ? img.src : checkEmailImg.src}
+          alt="#"
+          className={classes.img}
+        />
         <div className={classes.infoContainer}>
           <Heading xl2 semiBold textCenter>
             {heading}
@@ -17,9 +21,15 @@ const Successfull = ({ heading, info, onBack, isActive, onClose }) => {
             {info}
           </Text>
         </div>
-        <Button onClick={onClose} base>
-          Back
-        </Button>
+        {to ? (
+          <Button to={to} onClick={onClose} base>
+            Back to Home
+          </Button>
+        ) : (
+          <Button onClick={onClose} base>
+            Back
+          </Button>
+        )}
       </div>
     </Modal>
   );
