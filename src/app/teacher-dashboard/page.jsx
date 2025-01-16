@@ -23,6 +23,19 @@ const allclasses = ["class 8", "class 9", "class 10", "HSC-1st year"];
 // Function to handle updating teacher data
 const updateTeacherData = async (id, updatedData) => {
   try {
+    if (updatedData?.availability === "No") {
+      updatedData.availibility = false;
+    }
+
+    if (updatedData?.availability === "Yes") {
+      updatedData.availibility = true;
+    }
+    delete updatedData["availability"];
+
+    if (updatedData?.salary) {
+      updatedData.salary = parseInt(updatedData?.salary);
+    }
+
     console.log("Sending PATCH request with data:", updatedData);
     const response = await patch(`/api/teacher/${id}`, updatedData);
 

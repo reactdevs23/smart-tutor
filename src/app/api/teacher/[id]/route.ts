@@ -43,12 +43,6 @@ export const PATCH = async (
       return Response.json(error("Request body is empty!"), { status: 400 });
     }
 
-    console.log(
-      await prisma.teacher.update({
-        where: { id: id },
-      })
-    );
-    return Response.json(success(data));
     const updatedTeacher = await prisma.teacher.update({
       where: { id },
       data,
