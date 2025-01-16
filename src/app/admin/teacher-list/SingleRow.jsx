@@ -5,49 +5,77 @@ import clsx from "clsx";
 import { Dropdown, Text } from "@/components/common";
 import { IoIosMore } from "react-icons/io";
 import Modal from "@/components/common/Modal/Modal";
-import EditingModal from "@/components/Modal/Teacher/EditingModal/EditingModal";
 import AreYouSure from "@/components/Modal/AreYouSure/AreYouSure";
 import Successfull from "@/components/Modal/Successfull/Successfull";
+import { remove } from "../../../../lib/api"; // Import remove function to delete teacher
+import { banner } from "@/images";
+import EditingModal from "@/components/Modal/Teacher/EditingModal/EditingModal";
+
 const actionsName = ["edit", "delete"];
 
 const SingleRow = ({
+  id,
   name,
   img,
   email,
-  sallary,
+  salary,
   availability,
   medium,
   subjects,
-  classList,
+  classes: classList,
   description,
+  curriculum_type,
 }) => {
   const [showDropdown, setShowDropdown] = useState(false);
   const [actionName, setActionName] = useState("");
-
-  const [edited, setEdited] = useState(false);
-  const [deleting, setDeleting] = useState(false);
   const [deleted, setDeleted] = useState(false);
+  const [deleting, setDeleting] = useState(false);
+
+  // Handle deletion logic
+  const handleDelete = async () => {
+    try {
+      // Set deleting state to true to show modal
+      setDeleting(true);
+
+      // Call API to delete teacher
+      const response = await remove(`/api/teacher/${id}`); // DELETE request with teacher's ID
+      if (response.status === 200) {
+        setDeleted(true); // Set deleted flag to true on success
+        setActionName(null); // Close the dropdown
+      } else {
+        throw new Error("Failed to delete teacher");
+      }
+    } catch (err) {
+      console.error("Error deleting teacher:", err);
+      // Optionally, show an error modal or message
+    }
+  };
+
   return (
     <>
       <tr>
         <td>
           <div className={classes.item}>
-            <img src={img.src} alt={name} className={classes.profileImg} />
+            <img
+              src={img || banner.src} // Show default avatar if no profile picture
+              alt={name}
+              className={classes.profileImg}
+            />
             <Text sm bold>
-              {name}
+              {name || "N/A"}
             </Text>
           </div>
         </td>
         <td>
           <div className={classes.item}>
             <Text sm semiBold>
-              <a href={`mailto:${email}`}>{email}</a>
+              <a href={`mailto:${email}`}>{email || "N/A"}</a>
             </Text>
           </div>
         </td>
         <td>
           <Text sm semiBold>
-            {sallary} TK
+            {salary ? `${salary} TK` : "N/A"}
           </Text>
         </td>
         <td>
@@ -55,37 +83,53 @@ const SingleRow = ({
             xs
             bold
             className={clsx(
-              availability === "yes"
+              availability === true
                 ? classes.available
-                : availability === "no"
+                : availability === false
                 ? classes.notAvailable
                 : ""
             )}
           >
-            {availability}
+            {availability === true
+              ? "Available"
+              : availability === false
+              ? "Not Available"
+              : "N/A"}
           </Text>
         </td>
         <td>
           <Text sm semiBold>
-            {medium}
+            {curriculum_type || "N/A"}
           </Text>
         </td>
         <td>
           <div className={classes.list}>
-            {subjects?.map((item, id) => (
-              <Text sm semiBold key={id}>
-                {item}
+            {subjects?.length > 0 ? (
+              subjects.map((item, id) => (
+                <Text sm semiBold key={id}>
+                  {item}
+                </Text>
+              ))
+            ) : (
+              <Text sm semiBold>
+                N/A
               </Text>
-            ))}
+            )}
           </div>
         </td>
         <td>
           <div className={classes.list}>
-            {classList?.map((item, id) => (
-              <Text sm semiBold key={id} className={classes.myClass}>
-                {item}
+            {classList?.length > 0 ? (
+              classList.map((item, id) => (
+                <Text sm semiBold key={id} className={classes.myClass}>
+                  {item}
+                </Text>
+              ))
+            ) : (
+              <Text sm semiBold>
+                N/A
               </Text>
-            ))}
+            )}
           </div>
         </td>
         <td>
@@ -99,50 +143,57 @@ const SingleRow = ({
           >
             <IoIosMore className={classes.moreButton} />
           </Dropdown>
+
+          {/* Modal for editing (can be implemented) */}
           <Modal
             isActive={actionName === "edit"}
             onClose={() => setActionName(null)}
             heading="Editing Modal"
           >
-            <EditingModal
+            {/* <EditingModal
               onEdit={() => {
                 setActionName(null);
                 setEdited(true);
               }}
               currentName={name}
               img={img}
-              currentSallary={sallary}
+              currentSallary={salary}
               currentSubjects={subjects}
               currentDescription={description}
               currentClassList={classList}
               currentEmail={email}
               currentAvailability={availability}
               currentMedium={medium}
-            />
+              currentCurriculumType={curriculum_type}
+            /> */}
           </Modal>
+
+          {/* Are you sure modal for delete */}
           <AreYouSure
             isActive={actionName === "delete"}
-            onDelete={() => {
-              setDeleted(true);
-              setActionName(null);
-            }}
-            onClose={() => setDeleting(null)}
+            onDelete={handleDelete} // Trigger the delete handler
+            onClose={() => setActionName(null)}
             heading="Delete"
-            title="Are you sure you want to Delete"
+            title="Are you sure you want to delete?"
           />
+
+          {/* Success modal after deletion */}
           <Successfull
             isActive={deleted}
-            onClose={() => setDeleted(null)}
-            heading="Successfull"
+            onClose={() => setDeleted(false)}
+            heading="Successfully Deleted"
           />
-          <Successfull
+
+          {/* Success modal for editing */}
+          {/* <Successfull
             isActive={edited}
-            onClose={() => setEdited(null)}
-            heading="Successfull"
-          />
+            onClose={() => setEdited(false)}
+            heading="Successfully Edited"
+          /> */}
         </td>
       </tr>
     </>
   );
 };
+
 export default SingleRow;

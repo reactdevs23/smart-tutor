@@ -4,7 +4,7 @@ import { NextRequest } from "next/server";
 
 export const GET = async (
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: { id: string } } | any
 ) => {
   const id = params?.id;
   if (!id) {
@@ -29,7 +29,7 @@ export const GET = async (
 
 export const PATCH = async (
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: { id: string } } | any
 ) => {
   const id = params?.id;
   if (!id) {
@@ -68,7 +68,7 @@ export const PATCH = async (
 
 export const DELETE = async (
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: { id: string } } | any
 ) => {
   const id = params?.id;
   if (!id) {

@@ -1,197 +1,56 @@
-// TeacherList.js
-
 "use client";
+
 import clsx from "clsx";
 import classes from "./TeacherList.module.css";
 import { banner } from "@/images";
-
+import { Heading, Text } from "@/components/common";
+import { useEffect, useState } from "react";
+import { get } from "@/lib/api"; // Assuming you have a GET helper in your API utility
 import SingleRow from "./SingleRow";
-
 import Header from "@/components/Athentication/Header/Header";
-
+import { ROLES } from "../../../../lib/constant";
 const TeacherList = () => {
-  const data = [
-    {
-      img: banner,
-      name: "Dalim Kumar",
-      email: "abc@gmail.com",
-      sallary: 8000,
-      description:
-        "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the ",
-      availability: "yes",
-      medium: "English",
-      classList: ["class 8", "class 9"],
-      subjects: ["Bangla", "English"],
-    },
-    {
-      img: banner,
-      name: "Dalim Kumar",
-      email: "abc@gmail.com",
-      sallary: 8000,
-      description:
-        "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the ",
-      availability: "no",
-      medium: "English",
-      classList: ["class 8", "class 9"],
-      subjects: ["Bangla", "English"],
-    },
-    {
-      img: banner,
-      name: "Dalim Kumar",
-      email: "abc@gmail.com",
-      sallary: 8000,
-      description:
-        "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the ",
-      availability: "yes",
-      medium: "English",
-      classList: ["class 8", "class 9"],
-      subjects: ["Bangla", "English"],
-    },
-    {
-      img: banner,
-      name: "Dalim Kumar",
-      email: "abc@gmail.com",
-      sallary: 8000,
-      description:
-        "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the ",
-      availability: "no",
-      medium: "English",
-      classList: ["class 8", "class 9"],
-      subjects: ["Bangla", "English"],
-    },
-    {
-      img: banner,
-      name: "Dalim Kumar",
-      email: "abc@gmail.com",
-      sallary: 8000,
-      description:
-        "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the ",
-      availability: "yes",
-      medium: "English",
-      classList: ["class 8", "class 9"],
-      subjects: ["Bangla", "English"],
-    },
-    {
-      img: banner,
-      name: "Dalim Kumar",
-      email: "abc@gmail.com",
-      sallary: 8000,
-      description:
-        "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the ",
-      availability: "no",
-      medium: "English",
-      classList: ["class 8", "class 9"],
-      subjects: ["Bangla", "English"],
-    },
-    {
-      img: banner,
-      name: "Dalim Kumar",
-      email: "abc@gmail.com",
-      sallary: 8000,
-      description:
-        "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the ",
-      availability: "yes",
-      medium: "English",
-      classList: ["class 8", "class 9"],
-      subjects: ["Bangla", "English"],
-    },
-    {
-      img: banner,
-      name: "Dalim Kumar",
-      email: "abc@gmail.com",
-      sallary: 8000,
-      description:
-        "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the ",
-      availability: "no",
-      medium: "English",
-      classList: ["class 8", "class 9"],
-      subjects: ["Bangla", "English"],
-    },
-    {
-      img: banner,
-      name: "Dalim Kumar",
-      email: "abc@gmail.com",
-      sallary: 8000,
-      description:
-        "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the ",
-      availability: "yes",
-      medium: "English",
-      classList: ["class 8", "class 9"],
-      subjects: ["Bangla", "English"],
-    },
-    {
-      img: banner,
-      name: "Dalim Kumar",
-      email: "abc@gmail.com",
-      sallary: 8000,
-      description:
-        "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the ",
-      availability: "no",
-      medium: "English",
-      classList: ["class 8", "class 9"],
-      subjects: ["Bangla", "English"],
-    },
-    {
-      img: banner,
-      name: "Dalim Kumar",
-      email: "abc@gmail.com",
-      sallary: 8000,
-      description:
-        "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the ",
-      availability: "yes",
-      medium: "English",
-      classList: ["class 8", "class 9"],
-      subjects: ["Bangla", "English"],
-    },
-    {
-      img: banner,
-      name: "Dalim Kumar",
-      email: "abc@gmail.com",
-      sallary: 8000,
-      description:
-        "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the ",
-      availability: "no",
-      medium: "English",
-      classList: ["class 8", "class 9"],
-      subjects: ["Bangla", "English"],
-    },
-    {
-      img: banner,
-      name: "Dalim Kumar",
-      email: "abc@gmail.com",
-      sallary: 8000,
-      description:
-        "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the ",
-      availability: "yes",
-      medium: "English",
-      classList: ["class 8", "class 9"],
-      subjects: ["Bangla", "English"],
-    },
-    {
-      img: banner,
-      name: "Dalim Kumar",
-      email: "abc@gmail.com",
-      sallary: 8000,
-      description:
-        "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the ",
-      availability: "no",
-      medium: "English",
-      classList: ["class 8", "class 9"],
-      subjects: ["Bangla", "English"],
-    },
-  ];
+  const [teachers, setTeachers] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
+  useEffect(() => {
+    const fetchTeachers = async () => {
+      try {
+        const response = await get(`/api/list/${ROLES.TEACHER}`); // Make the API call to get teachers
+        console.log(response.data.data); // Inspect the fetched data
+        if (response?.status === 200) {
+          setTeachers(response.data.data); // Store teacher data in the state
+        } else {
+          throw new Error(
+            `Error: ${response?.statusText || "Failed to fetch"}`
+          );
+        }
+      } catch (err) {
+        console.error("Error fetching teachers:", err);
+        setError(err.message);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchTeachers();
+  }, []);
+
+  if (loading) return <Text lg>Loading teachers...</Text>;
+  if (error) return <Text lg color="red">{`Error: ${error}`}</Text>;
+  console.log(teachers);
   return (
     <section className={clsx(classes.wrapper, "container")}>
-      <Header heading="Teacher List" info="All the Teacher" />
+      <Header heading="Teacher List" info="All the Teachers" />
       <div className={classes.tableContainer}>
         <table className={classes.table}>
           <thead>
             <tr>
               <th>Name</th>
               <th>Email</th>
-              <th>Salary</th>
-              <th>Available</th>
+              <th>Sallary</th>
+              <th>Availibility</th>
               <th>Medium</th>
               <th>Subjects</th>
               <th>Classes</th>
@@ -199,7 +58,7 @@ const TeacherList = () => {
             </tr>
           </thead>
           <tbody>
-            {data?.map((el, i) => (
+            {teachers?.map((el, i) => (
               <SingleRow {...el} key={i} />
             ))}
           </tbody>

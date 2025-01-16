@@ -13,11 +13,14 @@ import { useState } from "react";
 import { handleKeyDown } from "@/hooks";
 import { banner, uploadImg } from "@/images";
 import clsx from "clsx";
+import { patch } from "../../../../../lib/api";
 
 const mediums = ["Bangla", "English", "Religious Studies"];
 const subjectList = ["Bangla", "English", "Physics", "Chemistry"];
 const allclasses = ["class 8", "class 9", "class 10", "HSC-1st year"];
+
 const EditingModal = ({
+  id,
   currentName,
   currentEmail,
   currentSallary,
@@ -26,38 +29,85 @@ const EditingModal = ({
   currentAvailability,
   currentMedium,
   currentSubjects,
-  currentClassName,
+  currentClass,
   onEdit,
+  multipleClass,
 }) => {
   const [name, setName] = useState(currentName);
   const [email, setEmail] = useState(currentEmail);
   const [sallary, setSallary] = useState(currentSallary);
 
   const [description, setDescription] = useState(currentDescription);
-  //upload img
   const [selectedImage, setSelectedImage] = useState(currentImg);
   const [previewUrl, setPreviewUrl] = useState();
 
   const handleImageChange = (event) => {
-    const { value, checked } = event.target;
+    const file = event.target.files[0];
+    if (!file) return;
 
-    if (allowMultiple) {
-      setSelected((prevSelected) => {
-        const updated = checked
-          ? [...prevSelected, value]
-          : prevSelected.filter((option) => option !== value);
-        console.log("Updated selection:", updated); // Debugging log
-        return [...updated]; // Force re-render
-      });
-    } else {
-      console.log("Updated selection:", value); // Debugging log
-      setSelected(value); // Force re-render for single selection
+    if (file.size > 10485760) {
+      alert("File size exceeds 10MB. Please select a smaller file.");
+      return;
     }
+
+    if (!file.type.startsWith("image/")) {
+      alert("Please select a valid image file.");
+      return;
+    }
+
+    const reader = new FileReader();
+    reader.onloadend = () => {
+      setPreviewUrl(reader.result);
+      setSelectedImage(reader.result); // Set the selected image base64
+    };
+    reader.readAsDataURL(file);
   };
 
   const [medium, setMedium] = useState(currentMedium);
   const [subjects, setSubjects] = useState(currentSubjects);
-  const [myClassName, setMyClassName] = useState(currentClassName);
+  const [myClassName, setMyClassName] = useState(currentClass);
+
+  const handleSubmit = async (event) => {
+    event.preventDefault();
+
+    const updatedData = {
+      name,
+      email,
+      sallary,
+      description,
+      profile_picture: selectedImage,
+      curriculum_type: medium,
+      subjects,
+      class: myClassName,
+    };
+    console.log(updatedData);
+    try {
+      // Call PATCH API to update the data
+      const response = await patch(`/api/student/${id}`, updatedData);
+
+      if (response.status === 200) {
+        alert("Profile updated successfully!");
+
+        // Immediately update the parent component state with the new data
+        onEdit(updatedData);
+
+        // Optionally, you can update the local state here to reflect changes immediately
+        setName(updatedData.name);
+        setEmail(updatedData.email);
+        setSallary(updatedData.sallary);
+        setDescription(updatedData.description);
+        setSelectedImage(updatedData.profile_picture);
+        setMedium(updatedData.curriculum_type);
+        setSubjects(updatedData.subjects);
+        setMyClassName(updatedData.class);
+      } else {
+        throw new Error("Failed to update profile");
+      }
+    } catch (error) {
+      console.error("Error updating profile:", error);
+      alert("There was an error updating your profile.");
+    }
+  };
 
   return (
     <section className={clsx(classes.wrapper)}>
@@ -66,9 +116,9 @@ const EditingModal = ({
       </div>
       <Header
         heading="Your Info"
-        info="Find a right students in your areas"
-      ></Header>
-      <form className={classes.inputWrapper}>
+        info="Find the right students in your areas"
+      />
+      <form className={classes.inputWrapper} onSubmit={handleSubmit}>
         <Input
           name="name"
           type="text"
@@ -85,13 +135,12 @@ const EditingModal = ({
           setValue={setEmail}
           placeholder="Enter your Email "
         />
-
         <TextArea
           textarea
           name="description"
           type="text"
           label="Description"
-          value={description}
+          value={description || ""}
           setValue={setDescription}
           placeholder="Enter your Description "
         />
@@ -100,13 +149,13 @@ const EditingModal = ({
         {previewUrl && (
           <div className={classes.preview}>
             <img
-              src={previewUrl.src}
+              src={previewUrl}
               alt="Image Preview"
               className={classes.image}
             />
           </div>
         )}
-        <img src={uploadImg.src} alt="#" className={classes.uploadImg} />{" "}
+        <img src={uploadImg.src} alt="#" className={classes.uploadImg} />
         <Text semiBold>
           <label htmlFor="uploadImg" className={classes.label}>
             Drag your file(s) or{" "}
@@ -140,19 +189,20 @@ const EditingModal = ({
           allowMultiple={true}
           name="subject-selection"
         />
+        {/*
         <MultipleChoice
           options={allclasses}
           selected={myClassName}
           setSelected={setMyClassName}
           label="Select Class"
-          allowMultiple={true}
           name="class-selection"
-        />
+        /> */}
       </div>
-      <Button type="submit" onClick={onEdit}>
+      <Button type="submit" onClick={handleSubmit}>
         Submit
       </Button>
     </section>
   );
 };
+
 export default EditingModal;

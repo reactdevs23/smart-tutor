@@ -1,31 +1,25 @@
 "use client";
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import classes from "./LoginForm.module.css";
 import { Button, Dropdown, Heading, Input, Text } from "@/components/common";
 import { FcGoogle } from "react-icons/fc";
 import { FaApple, FaFacebook } from "react-icons/fa";
 import clsx from "clsx";
 import Link from "next/link";
-
 import { ROLES } from "../../../../lib/constant";
 import { post } from "../../../../lib/api";
+
 const LoginForm = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [showDropdown, setShowDropdown] = useState(false);
   const [selectedRole, setSelectedRole] = useState("Teacher");
-
-  // useEffect(() => {
-  //   const userData = JSON.parse(localStorage.getItem("userData"));
-  //   console.log(userData.token);
-  //   if (userData.token) {
-  //     // If token exists, redirect to another page (e.g., dashboard)
-  //     window.location.href = "/dashboard"; // Change this to your desired route
-  //   }
-  // }, []);
+  const [loading, setLoading] = useState(false); // Track loading state
 
   const handleSignIn = async (e) => {
     e.preventDefault();
+    setLoading(true); // Set loading to true when starting the sign-in process
+
     try {
       const response = await post(
         `/api/${selectedRole.toLocaleLowerCase()}/auth/signin`,
@@ -50,6 +44,8 @@ const LoginForm = () => {
     } catch (error) {
       console.error("Sign-in error:", error);
       alert("Error occurred during sign-in. Please try again.");
+    } finally {
+      setLoading(false); // Set loading to false after the request completes
     }
   };
 
@@ -93,8 +89,15 @@ const LoginForm = () => {
         >
           Forgot Password
         </Button>
-        <Button btnPrimary base type="submit" className={classes.submitButton}>
-          Sign In
+        <Button
+          btnPrimary
+          base
+          type="submit"
+          className={classes.submitButton}
+          loading={loading}
+          disabled={loading} // Disable button while loading
+        >
+          {loading ? "Signing In..." : "Sign In"} {/* Show loading text */}
         </Button>
       </form>
       <Text primitive600 sm className={classes.or} textCenter>

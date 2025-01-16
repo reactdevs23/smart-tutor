@@ -1,72 +1,103 @@
+"use client";
+
 import clsx from "clsx";
 import classes from "./StuedentList.module.css";
-
-import { banner } from "@/images";
+import { banner, messageIcon } from "@/images";
 import { Heading, Text } from "@/components/common";
-
+import { useEffect, useState } from "react";
+import { get } from "@/lib/api"; // Assuming you have a GET helper in your API utility
+import Header from "@/components/Athentication/Header/Header";
+import { ROLES } from "../../../lib/constant";
 const StuedentList = () => {
-  const data = [
-    {
-      img: banner,
-      name: "Dalim Kumar",
-      email: "abc@gmail.com",
+  const [students, setStudents] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
-      details:
-        "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the ",
-      availability: true,
-      medium: "English",
-      className: "Class 8",
-      subjects: ["Bangla", "English"],
-    },
-    {
-      img: banner,
-      name: "Dalim Kumar",
-      email: "abc@gmail.com",
-      sallary: 8000,
-      details:
-        "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the ",
-      availability: true,
-      medium: "English",
-      className: "Class 8",
-      subjects: ["Bangla", "English"],
-    },
-  ];
+  useEffect(() => {
+    const fetchStudents = async () => {
+      try {
+        const response = await get(`/api/list/${ROLES.STUDENT}`);
+        console.log(response.data.data);
+        if (response?.status === 200) {
+          setStudents(response.data.data); // Assuming API returns a list of students in `data`
+        } else {
+          throw new Error(
+            `Error: ${response?.statusText || "Failed to fetch"}`
+          );
+        }
+      } catch (err) {
+        console.error("Error fetching students:", err);
+        setError(err.message);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchStudents();
+  }, []);
+
+  if (loading)
+    return (
+      <Text lg primitive800>
+        Loading students...
+      </Text>
+    );
+  if (error) return <Text lg color="red">{`Error: ${error}`}</Text>;
+
   return (
     <section className={clsx(classes.wrapper, "container")}>
+      <Header
+        heading="Student List"
+        info="Detailed list of Students with their subjects, and contact details"
+      />
+
       <div className={classes.cards}>
-        {data?.map((el, i) => (
+        {students?.map((el, i) => (
           <div className={classes.card} key={i}>
             <div className={classes.imgContainer}>
-              <img src={el.img.src} alt="#" className={classes.img} />
+              <img src={banner.src} alt="#" className={classes.img} />
             </div>
-            <Heading bold lg>
-              {el.name}
-            </Heading>
-            <Text xs>{el.details}</Text>
-            <div className={classes.list}>
-              <div className={classes.subjectList}>
-                <Heading sm bold>
-                  Subjct List
+            <div className={classes.infoContainer}>
+              <div className={classes.header}>
+                <Heading bold lg>
+                  {el.name || "N/A"}
                 </Heading>
-                {el.subjects.map((subject, i) => (
-                  <li key={i} className={classes.list}>
-                    {subject}
-                  </li>
-                ))}
-              </div>{" "}
-              <div className={classes.subjectList}>
-                <Heading primitive800 sm bold>
-                  Class: {el.className}
-                </Heading>
+                <a href={`mailto:${el.email || ""}`}>
+                  <img src={messageIcon.src} alt="#" className={classes.icon} />
+                </a>
               </div>
-              <Heading primitive800 sm bold>
-                Sallary:
-                {el.sallary}
-              </Heading>{" "}
-              <Heading primitive800 sm bold>
-                Email:
-                {el.email}
-              </Heading>
+              <Text xs>{el.description || "N/A"}</Text>
+              <div className={classes.list}>
+                <div className={classes.subjectList}>
+                  <Heading sm bold>
+                    Subject List
+                  </Heading>
+                  <ul className={classes.listContainer}>
+                    {(el?.subjects && el.subjects.length > 0
+                      ? el.subjects
+                      : ["N/A"]
+                    ).map((subject, i) => (
+                      <li key={i} className={classes.item}>
+                        {subject}
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+                <div className={classes.subjectList}>
+                  <Heading primitive800 sm bold>
+                    Class
+                  </Heading>
+                  <ul className={classes.listContainer}>
+                    <li className={classes.item}>{el.class || "N/A"}</li>
+                  </ul>
+                </div>
+              </div>{" "}
+              <div className={classes.footer}>
+                <Heading primitive800 sm bold>
+                  Medium:
+                </Heading>
+                <p className={classes.item}>{el.curriculum_type || "N/A"}</p>
+              </div>
             </div>
           </div>
         ))}
@@ -74,4 +105,5 @@ const StuedentList = () => {
     </section>
   );
 };
+
 export default StuedentList;

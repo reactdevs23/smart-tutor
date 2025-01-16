@@ -16,9 +16,11 @@ const SignupForm = ({ setStep }) => {
   const [password, setPassword] = useState("");
   const [showDropdown, setShowDropdown] = useState(false);
   const [selectedRole, setSelectedRole] = useState("admin"); // Default role
+  const [loading, setLoading] = useState(false); // Track loading state
 
   const handleSignup = async (e) => {
     e.preventDefault();
+    setLoading(true); // Set loading to true when fetching data
 
     try {
       const response = await post(
@@ -35,6 +37,8 @@ const SignupForm = ({ setStep }) => {
     } catch (error) {
       console.error("Signup failed:", error.response?.data || error.message);
       alert("Signup failed. Please try again.");
+    } finally {
+      setLoading(false); // Set loading to false after request completes
     }
   };
 
@@ -80,8 +84,15 @@ const SignupForm = ({ setStep }) => {
           onSelect={(val) => setSelectedRole(val)}
         />
 
-        <Button wFull base type="submit" className={classes.submitButton}>
-          Sign Up
+        <Button
+          wFull
+          base
+          type="submit"
+          className={classes.submitButton}
+          disabled={loading}
+          loading={loading}
+        >
+          {loading ? "Signing Up..." : "Sign Up"}
         </Button>
       </form>
       <Text primitive600 sm className={classes.or} textCenter>

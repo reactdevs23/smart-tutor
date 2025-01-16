@@ -9,27 +9,42 @@ import {
   Input as TextArea,
 } from "@/components/common";
 import classes from "./TeacherDashboard.module.css";
-import { useState } from "react";
-import { handleKeyDown } from "@/hooks";
+import { useState, useEffect } from "react";
+import { patch } from "../../../lib/api";
 import { banner, uploadImg } from "@/images";
 import clsx from "clsx";
 
-// Dummy API function (for now)
-const submitTeacherData = async (teacherData) => {
-  console.log("Teacher Data Submitted:", teacherData);
-  // Simulate a delay for the API call
-  return new Promise((resolve) => setTimeout(resolve, 2000));
-};
-
+// Constants for available options
 const availibility = ["Yes", "No"];
 const mediums = ["Bangla", "English", "Religious Studies"];
 const subjectList = ["Bangla", "English", "Physics", "Chemistry"];
 const allclasses = ["class 8", "class 9", "class 10", "HSC-1st year"];
 
+// Function to handle updating teacher data
+const updateTeacherData = async (id, updatedData) => {
+  try {
+    console.log("Sending PATCH request with data:", updatedData);
+    const response = await patch(`/api/teacher/${id}`, updatedData);
+
+    console.log("Response from API:", response);
+
+    if (response.status !== 200) {
+      throw new Error(
+        `Failed to update teacher data. Status: ${response.status}`
+      );
+    }
+
+    return response?.data?.data;
+  } catch (error) {
+    console.error("Error updating teacher data:", error);
+    throw error;
+  }
+};
+
 const TeacherDashboard = () => {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
-  const [sallary, setSallary] = useState("");
+  const [salary, setSalary] = useState("");
   const [description, setDescription] = useState("");
   const [selectedImage, setSelectedImage] = useState(null);
   const [previewUrl, setPreviewUrl] = useState(null);
@@ -37,14 +52,31 @@ const TeacherDashboard = () => {
   const [medium, setMedium] = useState("");
   const [subjects, setSubjects] = useState([]);
   const [classLists, setClassLists] = useState([]);
+  const [teacherId, setTeacherId] = useState("");
 
-  // Handle image selection
+  // Load data from localStorage on mount
+  useEffect(() => {
+    const storedData = localStorage.getItem("userData");
+    if (storedData) {
+      const parsedData = JSON.parse(storedData);
+      setTeacherId(parsedData.id || ""); // Get teacher ID from localStorage
+      setName(parsedData.name || "");
+      setEmail(parsedData.email || "");
+      setSalary(parsedData.salary || "");
+      setDescription(parsedData.description || "");
+      setIsAvailable(parsedData.availability || "");
+      setMedium(parsedData.curriculum_type || "");
+      setSubjects(parsedData.subjects || []);
+      setClassLists(parsedData.classes || []);
+      setSelectedImage(parsedData.profile_picture || null); // Load image from localStorage
+      setPreviewUrl(parsedData.profile_picture || null); // Set preview
+    }
+  }, []);
+
+  // Convert image file to base64
   const handleImageChange = (event) => {
     const file = event.target.files[0];
-
-    if (!file) {
-      return;
-    }
+    if (!file) return;
 
     if (file.size > 10485760) {
       alert("File size exceeds 10MB. Please select a smaller file.");
@@ -56,46 +88,60 @@ const TeacherDashboard = () => {
       return;
     }
 
-    setSelectedImage(file);
-    setPreviewUrl(URL.createObjectURL(file));
+    const reader = new FileReader();
+    reader.onloadend = () => {
+      setSelectedImage(reader.result);
+      setPreviewUrl(reader.result);
+    };
+    reader.readAsDataURL(file);
   };
 
-  // Handle form submission (no API for now, just simulate with console log)
+  // Handle form submission
   const handleSubmit = async (event) => {
     event.preventDefault();
 
-    const teacherData = {
+    const updatedData = {
       name,
       email,
-      sallary,
+      salary,
       description,
-      image: selectedImage,
       availability: isAvailable,
-      medium,
+      curriculum_type: medium,
       subjects,
       classes: classLists,
+      profile_picture: selectedImage,
     };
 
     try {
-      // Simulate API call
-      await submitTeacherData(teacherData);
-      alert("Teacher data submitted successfully!");
+      const updatedResponse = await updateTeacherData(teacherId, updatedData);
+
+      // Update localStorage
+      const updatedLocalStorageData = {
+        ...JSON.parse(localStorage.getItem("teacherData") || "{}"),
+        ...updatedResponse,
+      };
+      localStorage.setItem(
+        "teacherData",
+        JSON.stringify(updatedLocalStorageData)
+      );
+
+      alert("Teacher data updated successfully!");
     } catch (error) {
-      console.error("Error submitting data:", error);
-      alert("There was an error submitting your data.");
+      console.error("Error updating data:", error);
+      alert("There was an error updating your data.");
     }
   };
 
   return (
-    <section className={clsx(classes.wrapper, "container")}>
+    <form
+      className={clsx(classes.wrapper, "container")}
+      onSubmit={handleSubmit}
+    >
       <div className={classes.bannerContainer}>
         <img src={banner.src} alt="#" className={classes.banner} />
       </div>
-      <Header
-        heading="Your Info"
-        info="Find the right students in your areas"
-      />
-      <form className={classes.inputWrapper} onSubmit={handleSubmit}>
+      <Header heading="Your Info" info="Manage your profile and preferences" />
+      <div className={classes.inputWrapper}>
         <Input
           name="name"
           type="text"
@@ -113,13 +159,12 @@ const TeacherDashboard = () => {
           placeholder="Enter your Email"
         />
         <Input
-          name="sallary"
+          name="salary"
           type="number"
           label="Salary"
-          onKeyDown={handleKeyDown}
-          value={sallary}
-          setValue={setSallary}
-          placeholder="Enter your Salary"
+          value={salary}
+          setValue={setSalary}
+          placeholder="Enter your salary"
         />
         <TextArea
           textarea
@@ -130,7 +175,7 @@ const TeacherDashboard = () => {
           setValue={setDescription}
           placeholder="Enter your Description"
         />
-      </form>
+      </div>
       <div className={classes.uploadImgContainer}>
         {previewUrl && (
           <div className={classes.preview}>
@@ -164,7 +209,7 @@ const TeacherDashboard = () => {
           options={availibility}
           selected={isAvailable}
           setSelected={setIsAvailable}
-          label="Available Status"
+          label="Availability"
           name="availability"
         />
         <MultipleChoice
@@ -186,13 +231,13 @@ const TeacherDashboard = () => {
           options={allclasses}
           selected={classLists}
           setSelected={setClassLists}
-          label="Select Class"
-          name="classes"
+          label="Select Classes"
           allowMultiple
+          name="classes"
         />
       </div>
       <Button type="submit">Submit</Button>
-    </section>
+    </form>
   );
 };
 

@@ -41,7 +41,7 @@ const MultipleChoice = ({
                 value={option}
                 checked={
                   allowMultiple
-                    ? selected.includes(option)
+                    ? selected?.includes(option)
                     : String(selected).toLowerCase() === option.toLowerCase()
                 }
                 onChange={handleOptionChange}
