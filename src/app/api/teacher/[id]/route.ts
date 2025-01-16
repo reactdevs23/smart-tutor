@@ -43,6 +43,12 @@ export const PATCH = async (
       return Response.json(error("Request body is empty!"), { status: 400 });
     }
 
+    console.log(
+      await prisma.teacher.update({
+        where: { id: id },
+      })
+    );
+    return Response.json(success(data));
     const updatedTeacher = await prisma.teacher.update({
       where: { id },
       data,
@@ -53,14 +59,16 @@ export const PATCH = async (
     return Response.json(success(updatedTeacher));
   } catch (err) {
     console.error("Error updating Teacher:", err);
+    //  (err.code === "P2025") {
+    //       return Response.json(error("Teacher not found or update failed!"), {
+    //         status: 404,
+    //       });
+    //     }
 
-    if (err.code === "P2025") {
-      return Response.json(error("Teacher not found or update failed!"), {
-        status: 404,
-      });
-    }
-
-    return Response.json(error("Internal Server Error"), { status: 500 });
+    // if
+    return Response.json(error("Teacher not found or update failed!"), {
+      status: 500,
+    });
   }
 };
 
