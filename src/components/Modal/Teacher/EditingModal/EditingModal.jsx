@@ -75,7 +75,7 @@ const EditingModal = ({
           name="name"
           type="text"
           label="Full Name"
-          value={name}
+          value={name || ""}
           setValue={setName}
           placeholder="Enter your full name "
         />
@@ -83,7 +83,7 @@ const EditingModal = ({
           name="email"
           type="email"
           label="Email"
-          value={email}
+          value={email || ""}
           setValue={setEmail}
           placeholder="Enter your Email "
         />
@@ -93,7 +93,7 @@ const EditingModal = ({
           type="number"
           label="Sallary"
           onKeyDown={handleKeyDown}
-          value={sallary}
+          value={sallary || ""}
           setValue={setSallary}
           placeholder="Enter your Sallary "
         />
@@ -103,7 +103,7 @@ const EditingModal = ({
           name="description"
           type="text"
           label="Description"
-          value={description}
+          value={description || ""}
           setValue={setDescription}
           placeholder="Enter your Description "
         />
@@ -139,21 +139,22 @@ const EditingModal = ({
       <div className={classes.multipleChoice}>
         <MultipleChoice
           options={availability}
-          selected={isAvailable}
+          selected={isAvailable || false}
           setSelected={setIsAvailable}
           label="Available Status"
           name="availability-status"
         />
         <MultipleChoice
           options={mediums}
-          selected={medium}
+          selected={medium || []}
           setSelected={setMedium}
           label="Select Medium"
           name="medium-selection"
+          allowMultiple={true}
         />
         <MultipleChoice
           options={subjectList}
-          selected={subjects}
+          selected={subjects || []}
           setSelected={setSubjects}
           label="Select Subjects"
           allowMultiple={true}
@@ -161,7 +162,7 @@ const EditingModal = ({
         />
         <MultipleChoice
           options={allclasses}
-          selected={classLists}
+          selected={classLists || []}
           setSelected={setClassLists}
           label="Select Class"
           allowMultiple={true}

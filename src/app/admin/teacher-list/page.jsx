@@ -13,7 +13,9 @@ const TeacherList = () => {
   const [teachers, setTeachers] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-
+  const handleDeleteSuccess = (id) => {
+    setTeachers((prev) => prev.filter((teacher) => teacher.id !== id));
+  };
   useEffect(() => {
     const fetchTeachers = async () => {
       try {
@@ -59,7 +61,11 @@ const TeacherList = () => {
           </thead>
           <tbody>
             {teachers?.map((el, i) => (
-              <SingleRow {...el} key={i} />
+              <SingleRow
+                {...el}
+                key={i}
+                onDeleteSuccess={handleDeleteSuccess}
+              />
             ))}
           </tbody>
         </table>

@@ -7,7 +7,7 @@ import { IoIosMore } from "react-icons/io";
 import Modal from "@/components/common/Modal/Modal";
 import AreYouSure from "@/components/Modal/AreYouSure/AreYouSure";
 import Successfull from "@/components/Modal/Successfull/Successfull";
-import { remove } from "../../../../lib/api"; // Import remove function to delete teacher
+import { remove } from "../../../../lib/api"; // API call for deletion
 import { banner } from "@/images";
 import EditingModal from "@/components/Modal/Teacher/EditingModal/EditingModal";
 
@@ -25,6 +25,7 @@ const SingleRow = ({
   classes: classList,
   description,
   curriculum_type,
+  onDeleteSuccess, // Callback function to update parent list
 }) => {
   const [showDropdown, setShowDropdown] = useState(false);
   const [actionName, setActionName] = useState("");
@@ -34,20 +35,20 @@ const SingleRow = ({
   // Handle deletion logic
   const handleDelete = async () => {
     try {
-      // Set deleting state to true to show modal
-      setDeleting(true);
-
-      // Call API to delete teacher
-      const response = await remove(`/api/teacher/${id}`); // DELETE request with teacher's ID
+      setDeleting(true); // Show loading state
+      const response = await remove(`/api/teacher/${id}`); // API call to delete teacher
       if (response.status === 200) {
-        setDeleted(true); // Set deleted flag to true on success
-        setActionName(null); // Close the dropdown
+        setDeleted(true); // Show success modal
+        onDeleteSuccess(id); // Notify parent to remove teacher from the list
+        setActionName(null); // Close dropdown
       } else {
         throw new Error("Failed to delete teacher");
       }
     } catch (err) {
       console.error("Error deleting teacher:", err);
-      // Optionally, show an error modal or message
+      alert("Error deleting teacher. Please try again."); // Show error notification
+    } finally {
+      setDeleting(false); // Reset loading state
     }
   };
 
@@ -57,7 +58,7 @@ const SingleRow = ({
         <td>
           <div className={classes.item}>
             <img
-              src={img || banner.src} // Show default avatar if no profile picture
+              src={img || banner.src} // Default avatar if no image
               alt={name}
               className={classes.profileImg}
             />
@@ -83,18 +84,10 @@ const SingleRow = ({
             xs
             bold
             className={clsx(
-              availability === true
-                ? classes.available
-                : availability === false
-                ? classes.notAvailable
-                : ""
+              availability ? classes.available : classes.notAvailable
             )}
           >
-            {availability === true
-              ? "Available"
-              : availability === false
-              ? "Not Available"
-              : "N/A"}
+            {availability ? "Available" : "Not Available"}
           </Text>
         </td>
         <td>
@@ -104,7 +97,7 @@ const SingleRow = ({
         </td>
         <td>
           <div className={classes.list}>
-            {subjects?.length > 0 ? (
+            {subjects?.length ? (
               subjects.map((item, id) => (
                 <Text sm semiBold key={id}>
                   {item}
@@ -119,7 +112,7 @@ const SingleRow = ({
         </td>
         <td>
           <div className={classes.list}>
-            {classList?.length > 0 ? (
+            {classList?.length ? (
               classList.map((item, id) => (
                 <Text sm semiBold key={id} className={classes.myClass}>
                   {item}
@@ -144,16 +137,15 @@ const SingleRow = ({
             <IoIosMore className={classes.moreButton} />
           </Dropdown>
 
-          {/* Modal for editing (can be implemented) */}
+          {/* Modal for Editing */}
           <Modal
             isActive={actionName === "edit"}
             onClose={() => setActionName(null)}
             heading="Editing Modal"
           >
-            {/* <EditingModal
+            <EditingModal
               onEdit={() => {
                 setActionName(null);
-                setEdited(true);
               }}
               currentName={name}
               img={img}
@@ -165,31 +157,24 @@ const SingleRow = ({
               currentAvailability={availability}
               currentMedium={medium}
               currentCurriculumType={curriculum_type}
-            /> */}
+            />
           </Modal>
 
-          {/* Are you sure modal for delete */}
+          {/* Modal for Delete Confirmation */}
           <AreYouSure
             isActive={actionName === "delete"}
-            onDelete={handleDelete} // Trigger the delete handler
+            onDelete={handleDelete} // Trigger delete logic
             onClose={() => setActionName(null)}
             heading="Delete"
-            title="Are you sure you want to delete?"
+            title="Are you sure you want to delete this teacher?"
           />
 
-          {/* Success modal after deletion */}
+          {/* Success Modal */}
           <Successfull
             isActive={deleted}
             onClose={() => setDeleted(false)}
             heading="Successfully Deleted"
           />
-
-          {/* Success modal for editing */}
-          {/* <Successfull
-            isActive={edited}
-            onClose={() => setEdited(false)}
-            heading="Successfully Edited"
-          /> */}
         </td>
       </tr>
     </>

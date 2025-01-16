@@ -10,7 +10,6 @@ import {
 } from "@/components/common";
 import classes from "./EditingModal.module.css";
 import { useState } from "react";
-import { handleKeyDown } from "@/hooks";
 import { banner, uploadImg } from "@/images";
 import clsx from "clsx";
 import { patch } from "../../../../../lib/api";
@@ -36,10 +35,13 @@ const EditingModal = ({
   const [name, setName] = useState(currentName);
   const [email, setEmail] = useState(currentEmail);
   const [sallary, setSallary] = useState(currentSallary);
-
   const [description, setDescription] = useState(currentDescription);
   const [selectedImage, setSelectedImage] = useState(currentImg);
   const [previewUrl, setPreviewUrl] = useState();
+  const [medium, setMedium] = useState(currentMedium);
+  const [subjects, setSubjects] = useState(currentSubjects || []);
+  const [myClassName, setMyClassName] = useState(currentClass);
+  const [loading, setLoading] = useState(false); // Add loading state
 
   const handleImageChange = (event) => {
     const file = event.target.files[0];
@@ -63,12 +65,9 @@ const EditingModal = ({
     reader.readAsDataURL(file);
   };
 
-  const [medium, setMedium] = useState(currentMedium);
-  const [subjects, setSubjects] = useState(currentSubjects);
-  const [myClassName, setMyClassName] = useState(currentClass);
-
   const handleSubmit = async (event) => {
     event.preventDefault();
+    setLoading(true); // Set loading to true during submission
 
     const updatedData = {
       name,
@@ -80,32 +79,21 @@ const EditingModal = ({
       subjects,
       class: myClassName,
     };
-    console.log(updatedData);
+
     try {
-      // Call PATCH API to update the data
       const response = await patch(`/api/student/${id}`, updatedData);
 
       if (response.status === 200) {
         alert("Profile updated successfully!");
-
-        // Immediately update the parent component state with the new data
         onEdit(updatedData);
-
-        // Optionally, you can update the local state here to reflect changes immediately
-        setName(updatedData.name);
-        setEmail(updatedData.email);
-        setSallary(updatedData.sallary);
-        setDescription(updatedData.description);
-        setSelectedImage(updatedData.profile_picture);
-        setMedium(updatedData.curriculum_type);
-        setSubjects(updatedData.subjects);
-        setMyClassName(updatedData.class);
       } else {
         throw new Error("Failed to update profile");
       }
     } catch (error) {
       console.error("Error updating profile:", error);
       alert("There was an error updating your profile.");
+    } finally {
+      setLoading(false); // Reset loading to false after submission
     }
   };
 
@@ -189,17 +177,21 @@ const EditingModal = ({
           allowMultiple={true}
           name="subject-selection"
         />
-        {/*
         <MultipleChoice
           options={allclasses}
           selected={myClassName}
           setSelected={setMyClassName}
           label="Select Class"
           name="class-selection"
-        /> */}
+        />
       </div>
-      <Button type="submit" onClick={handleSubmit}>
-        Submit
+      <Button
+        type="submit"
+        onClick={handleSubmit}
+        disabled={loading}
+        loading={loading}
+      >
+        {loading ? "Submitting..." : "Submit"}
       </Button>
     </section>
   );
