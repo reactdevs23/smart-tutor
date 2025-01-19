@@ -10,15 +10,17 @@ import {
 } from "@/components/common";
 import classes from "./EditingModal.module.css";
 import { useState } from "react";
-import { handleKeyDown } from "@/hooks";
 import { banner, uploadImg } from "@/images";
 import clsx from "clsx";
+import { patch } from "../../../../../lib/api";
 
 const availability = ["yes", "no"];
 const mediums = ["Bangla", "English", "Religious Studies"];
 const subjectList = ["Bangla", "English", "Physics", "Chemistry"];
 const allclasses = ["class 8", "class 9", "class 10", "HSC-1st year"];
+
 const EditingModal = ({
+  id,
   currentName,
   currentEmail,
   currentSallary,
@@ -30,74 +32,104 @@ const EditingModal = ({
   currentClassList,
   onEdit,
 }) => {
-  const [name, setName] = useState(currentName);
-  const [email, setEmail] = useState(currentEmail);
-  const [sallary, setSallary] = useState(currentSallary);
+  const [loading, setLoading] = useState(false);
 
-  const [description, setDescription] = useState(currentDescription);
-  //upload img
-  const [selectedImage, setSelectedImage] = useState(null);
-  const [previewUrl, setPreviewUrl] = useState(currentImg);
+  const [name, setName] = useState(currentName || "");
+  const [email, setEmail] = useState(currentEmail || "");
+  const [sallary, setSallary] = useState(currentSallary || "");
+  const [description, setDescription] = useState(currentDescription || "");
+  const [selectedImage, setSelectedImage] = useState(currentImg);
+  const [previewUrl, setPreviewUrl] = useState(currentImg || "");
+  const [medium, setMedium] = useState(currentMedium || []);
+  const [subjects, setSubjects] = useState(currentSubjects || []);
+  const [classList, setClassList] = useState(currentClassList || []);
+  const [isAvailable, setIsAvailable] = useState(currentAvailability || "no");
 
   const handleImageChange = (event) => {
-    const { value, checked } = event.target;
+    const file = event.target.files[0];
+    if (!file) return;
 
-    if (allowMultiple) {
-      setSelected((prevSelected) => {
-        const updated = checked
-          ? [...prevSelected, value]
-          : prevSelected.filter((option) => option !== value);
-        console.log("Updated selection:", updated); // Debugging log
-        return [...updated]; // Force re-render
-      });
-    } else {
-      console.log("Updated selection:", value); // Debugging log
-      setSelected(value); // Force re-render for single selection
+    if (file.size > 10485760) {
+      alert("File size exceeds 10MB. Please select a smaller file.");
+      return;
+    }
+
+    if (!file.type.startsWith("image/")) {
+      alert("Please select a valid image file.");
+      return;
+    }
+
+    const reader = new FileReader();
+    reader.onloadend = () => {
+      setPreviewUrl(reader.result);
+      setSelectedImage(reader.result); // Set the selected image base64
+    };
+    reader.readAsDataURL(file);
+  };
+  const handleSubmit = async (event) => {
+    event.preventDefault();
+    setLoading(true); // Set loading to true when submission starts
+
+    try {
+      const updatedData = {
+        name,
+        email,
+        sallary,
+        description,
+        profile_picture: selectedImage,
+        availability: isAvailable,
+        curriculum_type: medium,
+        subjects,
+        classes: classList,
+      };
+
+      const response = await patch(`/api/student/${id}`, updatedData);
+
+      if (response.status === 200) {
+        alert("Profile updated successfully!");
+        onEdit(updatedData);
+      } else {
+        throw new Error("Failed to update profile");
+      }
+    } catch (error) {
+      console.error("Error updating profile:", error);
+      alert("There was an error updating your profile.");
+    } finally {
+      setLoading(false); // Reset loading to false after submission
     }
   };
-
-  const [isAvailable, setIsAvailable] = useState(currentAvailability);
-  const [medium, setMedium] = useState(currentMedium);
-  const [subjects, setSubjects] = useState(currentSubjects);
-  const [classLists, setClassLists] = useState(currentClassList);
 
   return (
     <section className={clsx(classes.wrapper)}>
       <div className={classes.bannerContainer}>
         <img src={banner.src} alt="#" className={classes.banner} />
       </div>
-      <Header
-        heading="Your Info"
-        info="Find a right students in your areas"
-      ></Header>
-      <form className={classes.inputWrapper}>
+      <Header heading="Your Info" info="Find the right students in your area" />
+      <form className={classes.inputWrapper} onSubmit={handleSubmit}>
         <Input
           name="name"
           type="text"
           label="Full Name"
-          value={name || ""}
+          value={name}
           setValue={setName}
-          placeholder="Enter your full name "
+          placeholder="Enter your full name"
         />
         <Input
           name="email"
           type="email"
           label="Email"
-          value={email || ""}
+          value={email}
           setValue={setEmail}
-          placeholder="Enter your Email "
+          placeholder="Enter your email"
         />
-
         <Input
           name="sallary"
           type="number"
-          label="Sallary"
-          onKeyDown={handleKeyDown}
-          value={sallary || ""}
+          label="Salary"
+          value={sallary}
           setValue={setSallary}
-          placeholder="Enter your Sallary "
+          placeholder="Enter your salary"
         />
-
         <TextArea
           textarea
           name="description"
@@ -105,20 +137,20 @@ const EditingModal = ({
           label="Description"
           value={description || ""}
           setValue={setDescription}
-          placeholder="Enter your Description "
+          placeholder="Enter your description"
         />
       </form>
       <div className={classes.uploadImgContainer}>
         {previewUrl && (
           <div className={classes.preview}>
             <img
-              src={previewUrl.src}
+              src={previewUrl}
               alt="Image Preview"
               className={classes.image}
             />
           </div>
         )}
-        <img src={uploadImg.src} alt="#" className={classes.uploadImg} />{" "}
+        <img src={uploadImg.src} alt="#" className={classes.uploadImg} />
         <Text semiBold>
           <label htmlFor="uploadImg" className={classes.label}>
             Drag your file(s) or{" "}
@@ -150,29 +182,35 @@ const EditingModal = ({
           setSelected={setMedium}
           label="Select Medium"
           name="medium-selection"
-          allowMultiple={true}
+          allowMultiple
         />
         <MultipleChoice
           options={subjectList}
           selected={subjects || []}
           setSelected={setSubjects}
           label="Select Subjects"
-          allowMultiple={true}
+          allowMultiple
           name="subject-selection"
         />
         <MultipleChoice
           options={allclasses}
-          selected={classLists || []}
-          setSelected={setClassLists}
+          selected={classList || []}
+          setSelected={setClassList}
           label="Select Class"
-          allowMultiple={true}
+          allowMultiple
           name="class-selection"
         />
       </div>
-      <Button type="submit" onClick={onEdit}>
-        Submit
+      <Button
+        type="submit"
+        onClick={handleSubmit}
+        disabled={loading}
+        loading={loading}
+      >
+        {loading ? "Submitting..." : "Submit"}
       </Button>
     </section>
   );
 };
+
 export default EditingModal;
