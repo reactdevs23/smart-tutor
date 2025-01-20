@@ -937,6 +937,162 @@
 					]
 				}
 			]
+		},
+		{
+			"name": "Forgot",
+			"item": [
+				{
+					"name": "request",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"email\": \"cokapix959@citdaca.com\",\r\n    \"role\": \"STUDENT\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:3000/api/forgot",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"api",
+								"forgot"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "verify",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:3000/api/forgot?token=cm65eoaov0001ye3ce08fymqr&code=674790&role=STUDENT",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"api",
+								"forgot"
+							],
+							"query": [
+								{
+									"key": "token",
+									"value": "cm65eoaov0001ye3ce08fymqr"
+								},
+								{
+									"key": "code",
+									"value": "674790"
+								},
+								{
+									"key": "role",
+									"value": "STUDENT"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "update",
+					"request": {
+						"method": "PATCH",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"role\": \"STUDENT\",\r\n    \"token\": \"cm65eoaov0001ye3ce08fymqr\",\r\n    \"password\": \"12345678\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:3000/api/forgot",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"api",
+								"forgot"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "get all",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:3000/api/list/STUDENT",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"api",
+						"list",
+						"STUDENT"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "New Request",
+			"request": {
+				"method": "GET",
+				"header": []
+			},
+			"response": []
+		},
+		{
+			"name": "Verification",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:3000/api/verification?user_id=cm65bid5j0006yexwn62c4k1z&token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6ImNtNjViaWRlbTAwMDd5ZXh3czJ6bmM0M2IiLCJlbWFpbCI6ImNva2FwaXg5NTlAY2l0ZGFjYS5jb20iLCJ1c2VyX2lkIjoiY202NWJpZDVqMDAwNnlleHduNjJjNGsxeiIsInJvbGUiOiJTVFVERU5UIiwiaWF0IjoxNzM3MzkzOTY4fQ.DZBRDf-OPooZIr9z-4QiOpecU61RZkhU421X1TOLb6A",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"api",
+						"verification"
+					],
+					"query": [
+						{
+							"key": "user_id",
+							"value": "cm65bid5j0006yexwn62c4k1z"
+						},
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6ImNtNjViaWRlbTAwMDd5ZXh3czJ6bmM0M2IiLCJlbWFpbCI6ImNva2FwaXg5NTlAY2l0ZGFjYS5jb20iLCJ1c2VyX2lkIjoiY202NWJpZDVqMDAwNnlleHduNjJjNGsxeiIsInJvbGUiOiJTVFVERU5UIiwiaWF0IjoxNzM3MzkzOTY4fQ.DZBRDf-OPooZIr9z-4QiOpecU61RZkhU421X1TOLb6A"
+						}
+					]
+				}
+			},
+			"response": []
 		}
 	]
 }
