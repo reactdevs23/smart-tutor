@@ -116,7 +116,7 @@ const POST = async (request: any) => {
             <body>
                 <div class="email-container">
                 <div class="email-header">
-                    <h1>Verify Your Email</h1>
+                    <h1>Verification Code</h1>
                 </div>
                 <div class="email-body">
                     <p>Hi,</p>
@@ -194,6 +194,8 @@ const PATCH = async (request: any) => {
         if (!updatedUser) {
             return Response.json(error("Failed to Forgot password"));
         }
+
+        await prisma.resetPassword.delete({ where: { id: resetPasswordReq.id } });
 
         return Response.json(success("Password updated!"));
     } catch (error) {

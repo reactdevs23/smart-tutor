@@ -968,7 +968,67 @@
 							]
 						}
 					},
-					"response": []
+					"response": [
+						{
+							"name": "request",
+							"originalRequest": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"email\": \"cokapix959@citdaca.com\",\r\n    \"role\": \"STUDENT\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://localhost:3000/api/forgot",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "3000",
+									"path": [
+										"api",
+										"forgot"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "vary",
+									"value": "RSC, Next-Router-State-Tree, Next-Router-Prefetch, Next-Router-Segment-Prefetch"
+								},
+								{
+									"key": "content-type",
+									"value": "application/json"
+								},
+								{
+									"key": "Date",
+									"value": "Mon, 20 Jan 2025 19:57:00 GMT"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								},
+								{
+									"key": "Keep-Alive",
+									"value": "timeout=5"
+								},
+								{
+									"key": "Transfer-Encoding",
+									"value": "chunked"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"message\": \"Success\",\n    \"status\": 200,\n    \"data\": {\n        \"token\": \"cm65eoaov0001ye3ce08fymqr\"\n    }\n}"
+						}
+					]
 				},
 				{
 					"name": "verify",
@@ -1002,7 +1062,72 @@
 							]
 						}
 					},
-					"response": []
+					"response": [
+						{
+							"name": "verify",
+							"originalRequest": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "http://localhost:3000/api/forgot?token=cm65eoaov0001ye3ce08fymqr&code=674790&role=STUDENT",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "3000",
+									"path": [
+										"api",
+										"forgot"
+									],
+									"query": [
+										{
+											"key": "token",
+											"value": "cm65eoaov0001ye3ce08fymqr"
+										},
+										{
+											"key": "code",
+											"value": "674790"
+										},
+										{
+											"key": "role",
+											"value": "STUDENT"
+										}
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "vary",
+									"value": "RSC, Next-Router-State-Tree, Next-Router-Prefetch, Next-Router-Segment-Prefetch"
+								},
+								{
+									"key": "content-type",
+									"value": "application/json"
+								},
+								{
+									"key": "Date",
+									"value": "Mon, 20 Jan 2025 20:00:02 GMT"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								},
+								{
+									"key": "Keep-Alive",
+									"value": "timeout=5"
+								},
+								{
+									"key": "Transfer-Encoding",
+									"value": "chunked"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"message\": \"Success\",\n    \"status\": 200,\n    \"data\": {\n        \"is_valid\": true,\n        \"id\": \"cm65eoaov0000ye3c68ajuiv9\",\n        \"code\": 674790,\n        \"email\": \"cokapix959@citdaca.com\",\n        \"role\": \"STUDENT\",\n        \"token\": \"cm65eoaov0001ye3ce08fymqr\"\n    }\n}"
+						}
+					]
 				},
 				{
 					"name": "update",
@@ -1031,7 +1156,67 @@
 							]
 						}
 					},
-					"response": []
+					"response": [
+						{
+							"name": "update",
+							"originalRequest": {
+								"method": "PATCH",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"role\": \"STUDENT\",\r\n    \"token\": \"cm65eoaov0001ye3ce08fymqr\",\r\n    \"password\": \"12345678\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://localhost:3000/api/forgot",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "3000",
+									"path": [
+										"api",
+										"forgot"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "vary",
+									"value": "RSC, Next-Router-State-Tree, Next-Router-Prefetch, Next-Router-Segment-Prefetch"
+								},
+								{
+									"key": "content-type",
+									"value": "application/json"
+								},
+								{
+									"key": "Date",
+									"value": "Mon, 20 Jan 2025 20:00:23 GMT"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								},
+								{
+									"key": "Keep-Alive",
+									"value": "timeout=5"
+								},
+								{
+									"key": "Transfer-Encoding",
+									"value": "chunked"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"message\": \"Success\",\n    \"status\": 200,\n    \"data\": \"Password updated!\"\n}"
+						}
+					]
 				}
 			]
 		},

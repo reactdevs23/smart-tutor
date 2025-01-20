@@ -62,7 +62,7 @@ export const requestVerification = async (role: string, email: string, user_id: 
             .verify-button {
                 display: inline-block;
                 background-color: #4caf50;
-                color: #ffffff;
+                color: #ffffff !important;
                 text-decoration: none;
                 padding: 12px 25px;
                 border-radius: 5px;
