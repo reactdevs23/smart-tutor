@@ -13,7 +13,7 @@ export const GET = async (request: NextRequest) => {
     try {
         if (role === ROLES.STUDENT) {
             response = await prisma.student.findMany({
-                // where: { is_verified: true },
+                where: { is_verified: true },
                 select: {
                     class: true,
                     curriculum_type: true,
@@ -27,7 +27,7 @@ export const GET = async (request: NextRequest) => {
             });
         } else if (role === ROLES.TEACHER) {
             response = await prisma.teacher.findMany({
-                // where: { is_verified: true },
+                where: { is_verified: true },
                 select: {
                     curriculum_type: true,
                     description: true,
@@ -43,7 +43,7 @@ export const GET = async (request: NextRequest) => {
             });
         } else if (role === ROLES.ADMIN) {
             response = await prisma.admin.findMany({
-                // where: { is_verified: true },
+                where: { is_verified: true },
                 select: {
                     description: true,
                     email: true,

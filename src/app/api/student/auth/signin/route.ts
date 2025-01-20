@@ -22,9 +22,9 @@ const POST = async (request: any) => {
         return Response.json(error("Email or password Did not matched!"));
     }
 
-    // if (!isExist.is_verified) {
-    //     return Response.json(error("Your are not verified."));
-    // }
+    if (!isExist.is_verified) {
+        return Response.json(error("Your are not verified."));
+    }
 
     delete isExist['password' as string];
     const token = await sign(isExist);
