@@ -157,6 +157,7 @@ const SingleRow = ({
               currentAvailability={availability}
               currentMedium={medium}
               currentCurriculumType={curriculum_type}
+              id={id}
             />
           </Modal>
 

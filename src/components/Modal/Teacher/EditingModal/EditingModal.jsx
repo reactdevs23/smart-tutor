@@ -1,5 +1,4 @@
 "use client";
-
 import Header from "@/components/Athentication/Header/Header";
 import {
   Button,
@@ -12,7 +11,7 @@ import classes from "./EditingModal.module.css";
 import { useState } from "react";
 import { banner, uploadImg } from "@/images";
 import clsx from "clsx";
-import { patch } from "../../../../../lib/api";
+import { patch } from "@/lib/api";
 
 const availability = ["yes", "no"];
 const mediums = ["Bangla", "English", "Religious Studies"];
@@ -33,14 +32,13 @@ const EditingModal = ({
   onEdit,
 }) => {
   const [loading, setLoading] = useState(false);
-
   const [name, setName] = useState(currentName || "");
   const [email, setEmail] = useState(currentEmail || "");
   const [sallary, setSallary] = useState(currentSallary || "");
   const [description, setDescription] = useState(currentDescription || "");
-  const [selectedImage, setSelectedImage] = useState(currentImg);
+  const [selectedImage, setSelectedImage] = useState(currentImg || "");
   const [previewUrl, setPreviewUrl] = useState(currentImg || "");
-  const [medium, setMedium] = useState(currentMedium || []);
+  const [medium, setMedium] = useState(currentMedium || "");
   const [subjects, setSubjects] = useState(currentSubjects || []);
   const [classList, setClassList] = useState(currentClassList || []);
   const [isAvailable, setIsAvailable] = useState(currentAvailability || "no");
@@ -74,10 +72,10 @@ const EditingModal = ({
       const updatedData = {
         name,
         email,
-        sallary,
+        salary: parseInt(sallary),
         description,
         profile_picture: selectedImage,
-        availability: isAvailable,
+        availibility: isAvailable == "Yes" ? true : false,
         curriculum_type: medium,
         subjects,
         classes: classList,
@@ -178,11 +176,10 @@ const EditingModal = ({
         />
         <MultipleChoice
           options={mediums}
-          selected={medium || []}
+          selected={medium || ""}
           setSelected={setMedium}
           label="Select Medium"
           name="medium-selection"
-          allowMultiple
         />
         <MultipleChoice
           options={subjectList}
