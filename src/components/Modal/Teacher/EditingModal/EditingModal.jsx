@@ -83,7 +83,7 @@ const EditingModal = ({
         classes: classList,
       };
 
-      const response = await patch(`/api/student/${id}`, updatedData);
+      const response = await patch(`/api/teacher/${id}`, updatedData);
 
       if (response.status === 200) {
         alert("Profile updated successfully!");
