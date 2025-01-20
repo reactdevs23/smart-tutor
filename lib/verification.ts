@@ -92,7 +92,7 @@ export const requestVerification = async (role: string, email: string, user_id: 
                 address to get started.
                 </p>
                 <div class="button-container">
-                <a class="verify-button" href="${webUrl}?user_id=${user_id}&token=${token}">Verify Email</a>
+                <a class="verify-button" href="${webUrl}/api/verification?user_id=${user_id}&token=${token}">Verify Email</a>
                 <p class="ignore">
                     If you didn't request this, please ignore this email.
                 </p>
