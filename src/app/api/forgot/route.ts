@@ -1,13 +1,23 @@
 import getRandomSixDigit from '@/lib/code';
 import { ROLES } from '@/lib/constant';
 import sendMail from '@/lib/email';
+import { ecryptPassword } from '@/lib/hash';
 import prisma from '@/lib/prisma';
 import { error, success } from '@/lib/response.helper';
 import { webUrl } from '@/lib/verification';
 import { NextRequest } from 'next/server';
 
-const GET = (request: NextRequest) => {
-    return Response.json({ success: true })
+const GET = async (request: NextRequest) => {
+    let response = { is_valid: false };
+    const token = await request.nextUrl.searchParams.get("token") as string;
+    const code = await request.nextUrl.searchParams.get("code");
+    const role = await request.nextUrl.searchParams.get("role") as string;
+    const requestForgot = await prisma.resetPassword.findFirst({ where: { token, code: Number(code), role } });
+    if (requestForgot) {
+        response = { ...response, ...requestForgot };
+        response.is_valid = true;
+    }
+    return Response.json(success(response));
 }
 
 const POST = async (request: any) => {
@@ -136,4 +146,60 @@ const POST = async (request: any) => {
     return Response.json(success({ token: resetPasswordReq.token }));
 }
 
-export { GET, POST };
+const PATCH = async (request: any) => {
+    try {
+        const requestData = await request?.json();
+        const { password, token, role } = requestData;
+
+        const resetPasswordReq = await prisma.resetPassword.findFirst({
+            where: {
+                token, role
+            }
+        });
+
+        if (!resetPasswordReq) {
+            return Response.json(error("Failed to Forgot password"));
+        }
+        const hashedPassword = await ecryptPassword(password);
+
+        let updatedUser: any = null;
+
+        if (resetPasswordReq.role === ROLES.ADMIN) {
+            const user = await prisma.admin.findFirst({ where: { email: resetPasswordReq.email as string } });
+            if (!user) {
+                return Response.json(error("Failed to Forgot password"));
+            }
+
+            updatedUser = await prisma.admin.update({ where: { id: user.id }, data: { password: hashedPassword } });
+        }
+
+        else if (resetPasswordReq.role === ROLES.STUDENT) {
+            const user = await prisma.student.findFirst({ where: { email: resetPasswordReq.email as string } });
+            if (!user) {
+                return Response.json(error("Failed to Forgot password"));
+            }
+
+            updatedUser = await prisma.student.update({ where: { id: user.id }, data: { password: hashedPassword } });
+        }
+
+        else if (resetPasswordReq.role === ROLES.TEACHER) {
+            const user = await prisma.teacher.findFirst({ where: { email: resetPasswordReq.email as string } });
+            if (!user) {
+                return Response.json(error("Failed to Forgot password"));
+            }
+
+            updatedUser = await prisma.teacher.update({ where: { id: user.id }, data: { password: hashedPassword } });
+        }
+
+        if (!updatedUser) {
+            return Response.json(error("Failed to Forgot password"));
+        }
+
+        return Response.json(success("Password updated!"));
+    } catch (error) {
+        console.log("Forgot Password Error: ", error)
+        return Response.json(error("Failed to Forgot password"));
+    }
+}
+
+export { GET, POST, PATCH };
