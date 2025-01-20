@@ -1,6 +1,8 @@
+import { ROLES } from '@/lib/constant';
 import { ecryptPassword } from '@/lib/hash';
 import prisma from '@/lib/prisma';
 import { error, success } from '@/lib/response.helper';
+import { requestVerification } from '@/lib/verification';
 
 const GET = (request: any) => {
     return Response.json({ success: true })
@@ -26,8 +28,8 @@ const POST = async (request: any) => {
         Response.error();
     }
 
+    await requestVerification(ROLES.TEACHER, teacher.email, teacher.id);
     delete teacher['password' as string];
-
     return Response.json(success(teacher));
 }
 

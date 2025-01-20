@@ -60,6 +60,19 @@ model ResetPassword {
     id    String  @id @default(cuid())
     code  Int?
     email String?
+    role String?
+    token String?
 
     @@map("reset_password_requests")
 }
+
+model Verification {
+    id    String  @id @default(cuid())
+    email String?
+    user_id String?
+    role  String?
+
+
+    @@map("verification_requests")
+}
+

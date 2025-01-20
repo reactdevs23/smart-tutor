@@ -1,7 +1,8 @@
-import sendMail from '@/lib/email';
+import { ROLES } from '@/lib/constant';
 import { ecryptPassword } from '@/lib/hash';
 import prisma from '@/lib/prisma';
 import { error, success } from '@/lib/response.helper';
+import { requestVerification } from '@/lib/verification';
 
 const POST = async (request: any) => {
     const requestData = await request?.json();
@@ -23,12 +24,7 @@ const POST = async (request: any) => {
         Response.error();
     }
 
-    sendMail(student.email, "Verify Student",
-        `
-            <div>Mehedi</div>
-        `
-    )
-
+    await requestVerification(ROLES.STUDENT, student.email, student.id);
     delete student['password' as string];
     return Response.json(success(student));
 }
