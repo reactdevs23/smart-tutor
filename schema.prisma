@@ -1,6 +1,6 @@
 generator client {
     provider        = "prisma-client-js"
-    previewFeatures = ["fullTextSearch", "fullTextIndex"]
+    previewFeatures = ["fullTextSearchPostgres", "fullTextIndex"]
 }
 
 datasource db {
@@ -61,7 +61,7 @@ model ResetPassword {
     code  Int?
     email String?
     role String?
-    token String?
+    token String @default(cuid())
 
     @@map("reset_password_requests")
 }
@@ -71,7 +71,6 @@ model Verification {
     email String?
     user_id String?
     role  String?
-
 
     @@map("verification_requests")
 }

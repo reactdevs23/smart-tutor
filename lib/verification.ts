@@ -1,7 +1,7 @@
 import sendMail from './email';
 import { sign, verify } from './jwt';
 import prisma from "./prisma";
-const webUrl = process.env.NEXTAUTH_URL;
+export const webUrl = process.env.NEXTAUTH_URL;
 
 export const requestVerification = async (role: string, email: string, user_id: string) => {
     try {
