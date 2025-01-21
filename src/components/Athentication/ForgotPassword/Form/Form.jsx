@@ -20,15 +20,6 @@ const Form = ({ step, setStep }) => {
     setStep((prev) => prev + 1);
   };
 
-  const handleSavePassword = async () => {
-    console.log("Saving new password for email:", email);
-    console.log("New Password:", newPassword);
-    console.log("Confirm Password:", confirmNewPassword);
-
-    // Example: await saveNewPasswordAPI(email, newPassword);
-    setStep((prev) => prev + 1);
-  };
-
   return (
     <section className={classes.wrapper}>
       <form action="" className={classes.form}>
@@ -62,7 +53,7 @@ const Form = ({ step, setStep }) => {
             setNewPassword={setNewPassword}
             confirmNewPassword={confirmNewPassword}
             setConfirmNewPassword={setConfirmNewPassword}
-            onSavePassword={handleSavePassword} // Trigger password save
+            // Trigger password save
           />
         )}
 

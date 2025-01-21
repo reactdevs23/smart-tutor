@@ -10,7 +10,8 @@ const ChangePassword = ({
   setNewPassword,
   confirmNewPassword,
   setConfirmNewPassword,
-  onSavePassword,
+
+  setStep,
 }) => {
   const [loading, setLoading] = useState(false);
 
@@ -45,9 +46,7 @@ const ChangePassword = ({
       });
 
       if (response.data.status === 200) {
-        alert("Password reset successfully!");
-        console.log("Password Reset Successfully");
-        onSavePassword && onSavePassword();
+        setStep((prev) => prev + 1);
       } else {
         alert("Failed to reset the password. Please try again.");
       }
