@@ -133,7 +133,7 @@ const StudentDashboard = () => {
       // Show success message
       alert("Student data updated successfully!");
     } catch (error) {
-      console.error("Error updating data:", error); // Log the error
+      console.error("Error updating data:", 8``); // Log the error
       alert("There was an error updating your data.");
     }
   };
