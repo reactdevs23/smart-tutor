@@ -3,11 +3,25 @@ import classes from "./AreYouSure.module.css";
 import { Button, Heading } from "@/components/common";
 const AreYouSure = ({ isActive, onClose, onDelete, title }) => {
   return (
-    <Modal heading="heading" isActive={isActive} onClose={onClose} sm>
+    <Modal
+      heading="Do You Want To Delete"
+      isActive={isActive}
+      onClose={onClose}
+      sm
+    >
+      {" "}
       <div className={classes.infoContainer}>
-        <Heading textCenter>{title}</Heading>
-        <Button onClick={onDelete}>Proceed</Button>
+        <Heading xl2 semiBold textCenter>
+          Confirm Deletion
+        </Heading>
+        <Text base primitive700 textCenter>
+          You're about to delete this item. This action is irreversible. Do you
+          want to continue
+        </Text>
       </div>
+      <Button onClick={onDelete} className={classes.button}>
+        Proceed
+      </Button>
     </Modal>
   );
 };
