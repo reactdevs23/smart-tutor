@@ -77,7 +77,7 @@ const SignupForm = ({ setStep }) => {
         />
         <Dropdown
           label="Select Role"
-          items={["STUDENT", "TEACHER", "ADMIN"]}
+          items={["STUDENT", "TEACHER"]}
           isActive={showDropdown}
           setIsActive={setShowDropdown}
           selectedValue={selectedRole}
