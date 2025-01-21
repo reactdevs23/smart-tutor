@@ -35,6 +35,9 @@
 .primitive800 {
   color: var(--Primitive-800);
 }
+.primitiveError {
+  color: var(--Primitive-Error);
+}
 .secondary {
   color: var(--secondary);
 }

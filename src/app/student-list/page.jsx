@@ -2,7 +2,7 @@
 
 import clsx from "clsx";
 import classes from "./StuedentList.module.css";
-import { banner, messageIcon } from "@/images";
+import { banner, messageIcon, userImg } from "@/images";
 import { Heading, Text } from "@/components/common";
 import { useEffect, useState } from "react";
 import { get } from "@/lib/api"; // Assuming you have a GET helper in your API utility
@@ -36,30 +36,29 @@ const StuedentList = () => {
     fetchStudents();
   }, []);
 
-  if (loading)
-    return (
-      <Text lg primitive800>
-        Loading students...
-      </Text>
-    );
-  if (error) return <Text lg color="red">{`Error: ${error}`}</Text>;
-
   return (
     <section className={clsx(classes.wrapper, "container")}>
       <Header
         heading="Student List"
         info="Detailed list of Students with their subjects, and contact details"
-      />
-
+      />{" "}
+      {loading && (
+        <Text lg textCenter bold>
+          Loading Students...
+        </Text>
+      )}
+      {error && (
+        <Text lg primitiveError textCenter bold>{`Error: ${error}`}</Text>
+      )}
       <div className={classes.cards}>
         {students?.map((el, i) => (
           <div className={classes.card} key={i}>
             <div className={classes.imgContainer}>
-              <img src={banner.src} alt="#" className={classes.img} />
+              <img src={userImg.src} alt="#" className={classes.img} />
             </div>
             <div className={classes.infoContainer}>
               <div className={classes.header}>
-                <Heading bold lg>
+                <Heading bold lg className={classes.name}>
                   {el.name || "N/A"}
                 </Heading>
                 <a href={`mailto:${el.email || ""}`}>

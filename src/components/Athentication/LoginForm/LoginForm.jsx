@@ -22,7 +22,7 @@ const LoginForm = () => {
 
     try {
       const response = await post(
-        `/api/${selectedRole.toLocaleLowerCase()}/auth/signin`,
+        `/api/${selectedRole.toLowerCase()}/auth/signin`,
         {
           email,
           password,
@@ -39,11 +39,20 @@ const LoginForm = () => {
         window.location.href = "/";
       } else {
         console.error("Unexpected response:", response);
-        alert("Sign-in Unsuccessful!");
+        alert("Sign-in unsuccessful! Please check your email or password.");
       }
     } catch (error) {
       console.error("Sign-in error:", error);
-      alert("Error occurred during sign-in. Please try again.");
+
+      // Handle specific error for "email not found"
+      if (error.response?.data?.message?.toLowerCase().includes("email")) {
+        alert("Email not found. Please check your email and try again.");
+      } else {
+        alert(
+          error.response?.data?.message ||
+            "Error occurred during sign-in. Please try again."
+        );
+      }
     } finally {
       setLoading(false); // Set loading to false after the request completes
     }

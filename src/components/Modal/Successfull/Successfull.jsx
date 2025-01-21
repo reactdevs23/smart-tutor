@@ -4,9 +4,24 @@ import classes from "./Successfull.module.css";
 import { Button, Heading, Text } from "@/components/common";
 import { checkEmailImg } from "@/images";
 import Modal from "../../common/Modal/Modal";
-const Successfull = ({ heading, info, onBack, isActive, onClose, to, img }) => {
+const Successfull = ({
+  heading,
+  info,
+  onBack,
+  isActive,
+  onClose,
+  to,
+  img,
+  backToText,
+  mainHeading,
+}) => {
   return (
-    <Modal isActive={isActive} onClose={onClose} heading="Success" sm>
+    <Modal
+      isActive={isActive}
+      onClose={onClose}
+      heading={mainHeading ? mainHeading : "Success"}
+      sm
+    >
       <div className={classes.wrapper}>
         <img
           src={img ? img.src : checkEmailImg.src}
@@ -23,7 +38,7 @@ const Successfull = ({ heading, info, onBack, isActive, onClose, to, img }) => {
         </div>
         {to ? (
           <Button to={to} onClick={onClose} base>
-            Back to Home
+            {backToText ? backToText : "Back to Home"}
           </Button>
         ) : (
           <Button onClick={onClose} base>

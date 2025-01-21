@@ -11,7 +11,7 @@ import {
 import classes from "./StudentDashboard.module.css";
 import { useState, useEffect } from "react";
 import { patch } from "../../../lib/api";
-import { banner, uploadImg } from "@/images";
+import { banner, errorImg, uploadImg } from "@/images";
 import clsx from "clsx";
 
 // Constants for available options
@@ -51,7 +51,8 @@ const StudentDashboard = () => {
   const [myClassName, setMyClassName] = useState("");
   const [studentId, setStudentId] = useState("");
   const [profile_picture, setProfilePicture] = useState(null); // Use profile_picture
-
+  const [showSuccessModal, setShowSuccessModal] = useState(false);
+  const [showErrorModal, setShowErrorModal] = useState(false);
   // Load data from localStorage on mount
 
   useEffect(() => {
@@ -137,103 +138,126 @@ const StudentDashboard = () => {
   };
 
   return (
-    <form
-      className={clsx(classes.wrapper, "container")}
-      onSubmit={handleSubmit}
-    >
-      <div className={classes.bannerContainer}>
-        <img src={banner.src} alt="#" className={classes.banner} />
-      </div>
-      <Header
-        heading="Your Info"
-        info="Find the right students in your areas"
+    <>
+      <form
+        className={clsx(classes.wrapper, "container")}
+        onSubmit={handleSubmit}
+      >
+        <div className={classes.bannerContainer}>
+          <img src={banner.src} alt="#" className={classes.banner} />
+        </div>
+        <Header
+          heading="Your Info"
+          info="Find the right students in your areas"
+        />
+        <div className={classes.inputWrapper}>
+          <Input
+            name="name"
+            type="text"
+            label="Full Name"
+            value={name}
+            setValue={setName}
+            placeholder="Enter your full name"
+            readonly
+          />
+          <Input
+            readonly
+            name="email"
+            type="email"
+            label="Email"
+            value={email}
+            setValue={setEmail}
+            placeholder="Enter your Email"
+          />
+          <TextArea
+            textarea
+            name="description"
+            type="text"
+            label="Description"
+            value={description}
+            setValue={setDescription}
+            placeholder="Enter your Description"
+          />
+        </div>
+
+        <div className={classes.uploadImgContainer}>
+          {previewUrl && (
+            <div className={classes.preview}>
+              <img
+                src={previewUrl}
+                alt="Image Preview"
+                className={classes.image}
+              />
+            </div>
+          )}
+          <img src={uploadImg.src} alt="#" className={classes.uploadImg} />
+          <Text semiBold>
+            <label htmlFor="uploadImg" className={classes.label}>
+              Drag your file(s) or{" "}
+              <span className={classes.highlight}>Browse</span>
+            </label>
+          </Text>
+          <Text primitive700 textCenter>
+            Max 10 MB files are allowed
+          </Text>
+          <input
+            id="uploadImg"
+            type="file"
+            accept="image/*"
+            onChange={handleImageChange}
+            className={classes.imgInput}
+          />
+        </div>
+
+        <div className={classes.multipleChoice}>
+          <MultipleChoice
+            options={mediums}
+            selected={medium}
+            setSelected={setMedium}
+            label="Select Medium"
+            name="medium"
+          />
+          <MultipleChoice
+            options={subjectList}
+            selected={subjects}
+            setSelected={setSubjects}
+            label="Select Subjects"
+            allowMultiple
+            name="subjects"
+          />
+          <MultipleChoice
+            options={allclasses}
+            selected={myClassName}
+            setSelected={setMyClassName}
+            label="Select Class"
+            name="classes"
+          />
+        </div>
+
+        <Button type="submit">Submit</Button>
+      </form>{" "}
+      <Successfull
+        heading="Data Uploaded Succesfully"
+        info="We’ve successfully Upload your Data. Enjoy your experience with Smart-Tutor."
+        isActive={showSuccessModal}
+        onClose={() => {
+          setShowSuccessModal(false);
+        }}
+        backToText="Back"
+        to="/student-dashboard"
       />
-      <div className={classes.inputWrapper}>
-        <Input
-          name="name"
-          type="text"
-          label="Full Name"
-          value={name}
-          setValue={setName}
-          placeholder="Enter your full name"
-          readonly
-        />
-        <Input
-          readonly
-          name="email"
-          type="email"
-          label="Email"
-          value={email}
-          setValue={setEmail}
-          placeholder="Enter your Email"
-        />
-        <TextArea
-          textarea
-          name="description"
-          type="text"
-          label="Description"
-          value={description}
-          setValue={setDescription}
-          placeholder="Enter your Description"
-        />
-      </div>
-
-      <div className={classes.uploadImgContainer}>
-        {previewUrl && (
-          <div className={classes.preview}>
-            <img
-              src={previewUrl}
-              alt="Image Preview"
-              className={classes.image}
-            />
-          </div>
-        )}
-        <img src={uploadImg.src} alt="#" className={classes.uploadImg} />
-        <Text semiBold>
-          <label htmlFor="uploadImg" className={classes.label}>
-            Drag your file(s) or{" "}
-            <span className={classes.highlight}>Browse</span>
-          </label>
-        </Text>
-        <Text primitive700 textCenter>
-          Max 10 MB files are allowed
-        </Text>
-        <input
-          id="uploadImg"
-          type="file"
-          accept="image/*"
-          onChange={handleImageChange}
-          className={classes.imgInput}
-        />
-      </div>
-
-      <div className={classes.multipleChoice}>
-        <MultipleChoice
-          options={mediums}
-          selected={medium}
-          setSelected={setMedium}
-          label="Select Medium"
-          name="medium"
-        />
-        <MultipleChoice
-          options={subjectList}
-          selected={subjects}
-          setSelected={setSubjects}
-          label="Select Subjects"
-          allowMultiple
-          name="subjects"
-        />
-        <MultipleChoice
-          options={allclasses}
-          selected={myClassName}
-          setSelected={setMyClassName}
-          label="Select Class"
-          name="classes"
-        />
-      </div>
-
-      <Button type="submit">Submit</Button>
-    </form>
+      <Successfull
+        heading="Data Upload Failed!"
+        info="We encountered an issue while uploading your data. Please try again ."
+        isActive={showErrorModal}
+        img={errorImg}
+        onClose={() => {
+          setShowErrorModal(false);
+        }}
+        backToText="Back"
+        to="/student-dashboard"
+      />
+    </>
   );
 };
 

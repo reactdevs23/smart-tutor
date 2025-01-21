@@ -3,11 +3,12 @@ import classes from "./Verify.module.css";
 import clsx from "clsx";
 import { Button } from "@/components/common";
 import Header from "@/components/Athentication/Header/Header";
+import { get, post } from "../../../../../lib/api"; // Assuming you're using a helper for API calls
 
 const Verify = ({
   codeSentOn,
   xl2,
-  onVerify,
+
   noResend,
   heading,
   info,
@@ -18,6 +19,8 @@ const Verify = ({
   const [remainingTime, setRemainingTime] = useState(30);
   const [canResend, setCanResend] = useState(false);
   const [OtpInput, setOtpInput] = useState(null); // Lazy load OTPInput
+  const [loading, setLoading] = useState(false);
+  const [resendLoading, setResendLoading] = useState(false);
 
   // Lazy load OTPInput on client side
   useEffect(() => {
@@ -41,24 +44,73 @@ const Verify = ({
     return () => clearInterval(timer);
   }, [remainingTime]);
 
-  const handleResend = () => {
-    console.log("Resend OTP triggered.");
-    alert("Verification code resent! (Backend API here)");
-    setRemainingTime(30);
-    setCanResend(false);
-  };
-
-  const handleVerify = (e) => {
+  const handleVerify = async (e) => {
     e.preventDefault();
-    if (OTP === "123456") {
-      setOtpInvalid(false);
-      setStep((prev) => prev + 1);
-      onVerify && onVerify();
-    } else {
+    setOtpInvalid(false);
+
+    // Fetch token and role from localStorage
+    const tokenAndRole = JSON.parse(localStorage.getItem("tokenEmailRole"));
+    const token = tokenAndRole?.token;
+    const role = tokenAndRole?.role;
+
+    if (!token || !role) {
+      alert("Error: Token or role not found .");
+      return;
+    }
+
+    try {
+      const response = await get(
+        `/api/forgot?token=${token}mqr&code=${OTP}&role=${role}`
+      );
+
+      if (response.data.status === 200) {
+        // Verification successful
+        console.log("Verification successful:", response.data);
+        setStep((prev) => prev + 1);
+      } else {
+        // Verification failed
+        console.log("Verification failed:", response);
+        setOtpInvalid(true);
+      }
+    } catch (error) {
+      console.error("Verification error:", error);
       setOtpInvalid(true);
     }
   };
+  const handleResend = async (e) => {
+    e.preventDefault();
+    setResendLoading(true);
 
+    setRemainingTime(30);
+    setCanResend(false);
+    const tokenEmailRole = JSON.parse(localStorage.getItem("tokenEmailRole"));
+    const email = tokenEmailRole?.email;
+    const role = tokenEmailRole?.role;
+
+    if (!role || !email) {
+      alert("Error: Role or email not found.");
+      return;
+    }
+    try {
+      const response = await post("/api/forgot", {
+        email,
+        role,
+      });
+
+      if (response.data.status === 200) {
+        console.log("Code Resend SuccesFully");
+      } else {
+        alert("Failed to send the password reset email. Please try again.");
+      }
+    } catch (error) {
+      console.error("Password reset error:", error);
+      alert(
+        "An error occurred during the password reset process. Please try again."
+      );
+    } finally {
+      setResendLoading(false); // Set loading to false after the request completes
+    }
+  };
   return (
     <div className={classes.wrapper}>
       <Header
@@ -92,7 +144,13 @@ const Verify = ({
         )}
 
         <div className={clsx(classes.actions, noResend && classes.noResend)}>
-          <Button onClick={handleVerify} size="md" btnPrimary>
+          <Button
+            onClick={handleVerify}
+            size="md"
+            btnPrimary
+            loading={loading}
+            disabled={loading}
+          >
             Verify
           </Button>
 

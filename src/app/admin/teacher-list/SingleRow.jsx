@@ -19,13 +19,14 @@ const SingleRow = ({
   img,
   email,
   salary,
-  availability,
+  availibility,
   medium,
   subjects,
   classes: classList,
   description,
   curriculum_type,
   onDeleteSuccess, // Callback function to update parent list
+  onEdit,
 }) => {
   const [showDropdown, setShowDropdown] = useState(false);
   const [actionName, setActionName] = useState("");
@@ -84,10 +85,10 @@ const SingleRow = ({
             xs
             bold
             className={clsx(
-              availability ? classes.available : classes.notAvailable
+              availibility ? classes.available : classes.notAvailable
             )}
           >
-            {availability ? "Available" : "Not Available"}
+            {availibility ? "Available" : "Not Available"}
           </Text>
         </td>
         <td>
@@ -100,7 +101,7 @@ const SingleRow = ({
             {subjects?.length ? (
               subjects.map((item, id) => (
                 <Text sm semiBold key={id}>
-                  {item}
+                  {item} {id < subjects.length - 1 && ", "}
                 </Text>
               ))
             ) : (
@@ -116,6 +117,7 @@ const SingleRow = ({
               classList.map((item, id) => (
                 <Text sm semiBold key={id} className={classes.myClass}>
                   {item}
+                  {id < classList.length - 1 && ", "}
                 </Text>
               ))
             ) : (
@@ -144,9 +146,11 @@ const SingleRow = ({
             heading="Editing Modal"
           >
             <EditingModal
-              onEdit={() => {
+              onEdit={(data) => {
                 setActionName(null);
+                onEdit(data);
               }}
+              id={id}
               currentName={name}
               img={img}
               currentSallary={salary}
@@ -154,10 +158,9 @@ const SingleRow = ({
               currentDescription={description}
               currentClassList={classList}
               currentEmail={email}
-              currentAvailability={availability}
+              currentAvailability={availibility}
               currentMedium={medium}
               currentCurriculumType={curriculum_type}
-              id={id}
             />
           </Modal>
 

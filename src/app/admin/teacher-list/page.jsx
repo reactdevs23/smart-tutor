@@ -41,10 +41,19 @@ const TeacherList = () => {
 
   if (loading) return <Text lg>Loading teachers...</Text>;
   if (error) return <Text lg color="red">{`Error: ${error}`}</Text>;
-  console.log(teachers);
+  // Edit student details (update student data)
+  const handleEditTeacher = (updatedTeachers) => {
+    setTeachers((prevTeachers) =>
+      prevTeachers.map((teacher) =>
+        teacher.id === updatedTeachers.id ? updatedTeachers : teacher
+      )
+    );
+  };
   return (
     <section className={clsx(classes.wrapper, "container")}>
       <Header heading="Teacher List" info="All the Teachers" />
+
+      {/* Display student table only if data is available */}
       <div className={classes.tableContainer}>
         <table className={classes.table}>
           <thead>
@@ -64,6 +73,7 @@ const TeacherList = () => {
               <SingleRow
                 {...el}
                 key={i}
+                onEdit={handleEditTeacher}
                 onDeleteSuccess={handleDeleteSuccess}
               />
             ))}

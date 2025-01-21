@@ -13,7 +13,7 @@ import { banner, uploadImg } from "@/images";
 import clsx from "clsx";
 import { patch } from "@/lib/api";
 
-const availability = ["yes", "no"];
+const availability = ["Yes", "No"];
 const mediums = ["Bangla", "English", "Religious Studies"];
 const subjectList = ["Bangla", "English", "Physics", "Chemistry"];
 const allclasses = ["class 8", "class 9", "class 10", "HSC-1st year"];
@@ -41,7 +41,7 @@ const EditingModal = ({
   const [medium, setMedium] = useState(currentMedium || "");
   const [subjects, setSubjects] = useState(currentSubjects || []);
   const [classList, setClassList] = useState(currentClassList || []);
-  const [isAvailable, setIsAvailable] = useState(currentAvailability || "no");
+  const [isAvailable, setIsAvailable] = useState(currentAvailability || "No");
 
   const handleImageChange = (event) => {
     const file = event.target.files[0];
@@ -70,17 +70,25 @@ const EditingModal = ({
 
     try {
       const updatedData = {
+        id,
         name,
         email,
         salary: parseInt(sallary),
         description,
         profile_picture: selectedImage,
-        availibility: isAvailable == "Yes" ? true : false,
+        availibility: isAvailable,
         curriculum_type: medium,
         subjects,
         classes: classList,
       };
+      if (updatedData?.availibility === "No") {
+        updatedData.availibility = false;
+      }
 
+      if (updatedData?.availibility === "Yes") {
+        updatedData.availibility = true;
+      }
+      console.log(availability);
       const response = await patch(`/api/teacher/${id}`, updatedData);
 
       if (response.status === 200) {
@@ -169,7 +177,7 @@ const EditingModal = ({
       <div className={classes.multipleChoice}>
         <MultipleChoice
           options={availability}
-          selected={isAvailable || false}
+          selected={isAvailable}
           setSelected={setIsAvailable}
           label="Available Status"
           name="availability-status"

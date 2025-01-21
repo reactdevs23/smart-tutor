@@ -18,6 +18,8 @@ import uk from "./uk.png";
 import usa from "./usa.png";
 import ourSystem from "./ourSystem.png";
 import messageIcon from "./message.png";
+import userImg from "./userImg.png";
+import errorImg from "./Error.svg";
 export {
   logo,
   //authentication
@@ -39,4 +41,6 @@ export {
   ourSystem,
   logo2,
   messageIcon,
+  userImg,
+  errorImg,
 };

@@ -18,7 +18,7 @@ const Text = ({
   primitive300,
   primitive400,
   primitive500,
-
+  primitiveError,
   primitive600,
   primitive700,
   primitive800,
@@ -50,6 +50,7 @@ const Text = ({
         primitive900 && classes.primitive900,
         primitive800 && classes.primitive800,
         primitive950 && classes.primitive950,
+        primitiveError && classes.primitiveError,
         secondary && classes.secondary,
         xs && classes.xs,
         sm && classes.sm,

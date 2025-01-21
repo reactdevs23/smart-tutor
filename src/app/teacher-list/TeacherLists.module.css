@@ -11,7 +11,7 @@
 }
 .card {
   border: 1px solid var(--Primitive-200);
-  border-radius: 8px;
+  border-radius: 15px;
   display: flex;
   flex-direction: column;
 }
@@ -20,7 +20,7 @@
   display: flex;
   flex-direction: column;
   justify-content: center;
-  height: 100%;
+
   gap: 12px;
 }
 .header {
@@ -28,9 +28,12 @@
   align-items: center;
   justify-content: space-between;
   gap: 15px;
-  padding: 15px 0;
+  padding: 6px 0;
 
   border-bottom: 1px solid #d5e1e3;
+}
+.name {
+  text-transform: capitalize;
 }
 .icon {
   max-width: 40px;

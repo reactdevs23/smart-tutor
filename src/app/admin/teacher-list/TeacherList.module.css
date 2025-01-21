@@ -84,8 +84,10 @@
   text-transform: uppercase;
 }
 .list {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
+  display: flex;
+
+  flex-wrap: wrap;
+  max-width: 300px;
   gap: 4px;
 }
 .moreButton {

@@ -15,7 +15,7 @@ const SignupForm = ({ setStep }) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [showDropdown, setShowDropdown] = useState(false);
-  const [selectedRole, setSelectedRole] = useState("admin"); // Default role
+  const [selectedRole, setSelectedRole] = useState("Student"); // Default role
   const [loading, setLoading] = useState(false); // Track loading state
 
   const handleSignup = async (e) => {
@@ -77,7 +77,7 @@ const SignupForm = ({ setStep }) => {
         />
         <Dropdown
           label="Select Role"
-          items={Object.values(ROLES)}
+          items={["STUDENT", "TEACHER"]}
           isActive={showDropdown}
           setIsActive={setShowDropdown}
           selectedValue={selectedRole}

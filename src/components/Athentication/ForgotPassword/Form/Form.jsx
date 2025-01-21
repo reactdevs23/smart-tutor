@@ -1,7 +1,7 @@
 "use client";
 import React, { useState, useEffect } from "react";
 import classes from "./Form.module.css";
-import { Button } from "@/components/common";
+import { Button, Dropdown } from "@/components/common";
 
 // Step components
 import EnterEmail from "../EnterEmail/EnterEmail";
@@ -14,23 +14,12 @@ const Form = ({ step, setStep }) => {
   const [newPassword, setNewPassword] = useState(""); // New password
   const [confirmNewPassword, setConfirmNewPassword] = useState(""); // Confirmed password
 
-  // Placeholder: Simulating sending the email
   const handleEnterEmail = async () => {
     console.log("Sending email to:", email);
-    // TODO: Backend Integration - Add API call to send verification email
-    // Example: await sendVerificationEmailAPI(email);
+
     setStep((prev) => prev + 1);
   };
 
-  // Placeholder: Simulating verifying the code
-  const handleVerifyCode = async () => {
-    console.log("Verifying code for email:", email);
-    // TODO: Backend Integration - Add API call to verify the OTP
-    // Example: await verifyOTPAPI(email, otp);
-    setStep((prev) => prev + 1);
-  };
-
-  // Placeholder: Simulating saving the new password
   const handleSavePassword = async () => {
     console.log("Saving new password for email:", email);
     console.log("New Password:", newPassword);
@@ -45,11 +34,13 @@ const Form = ({ step, setStep }) => {
       <form action="" className={classes.form}>
         {/* Step 1: Enter Email */}
         {step === 1 && (
-          <EnterEmail
-            email={email}
-            setEmail={setEmail}
-            onEnterEmail={handleEnterEmail} // Trigger email submission
-          />
+          <>
+            <EnterEmail
+              email={email}
+              setEmail={setEmail}
+              onEnterEmail={handleEnterEmail} // Trigger email submission
+            />
+          </>
         )}
 
         {/* Step 2: Verify Code */}
@@ -58,7 +49,6 @@ const Form = ({ step, setStep }) => {
             heading="Verification Code"
             info="A verification code was sent to your email. Please enter the confirmation code."
             setStep={setStep}
-            onVerify={handleVerifyCode} // Trigger OTP verification
             xl2
             codeSentOn={email} // Pass email for context
           />
