@@ -1,11 +1,11 @@
 generator client {
     provider        = "prisma-client-js"
-    previewFeatures = ["fullTextSearchPostgres", "fullTextIndex"]
+    previewFeatures = ["fullTextSearchPostgres"]
 }
 
 datasource db {
     provider = "postgresql"
-    url      = env("POSTGRES_PRISMA_URL")
+    url      = "postgres://neondb_owner:npg_RTMPxUZGj06c@ep-shiny-paper-a1kgsjua-pooler.ap-southeast-1.aws.neon.tech/neondb?sslmode=require"
 }
 
 model Student {
@@ -60,18 +60,17 @@ model ResetPassword {
     id    String  @id @default(cuid())
     code  Int?
     email String?
-    role String?
-    token String @default(cuid())
+    role  String?
+    token String  @default(cuid())
 
     @@map("reset_password_requests")
 }
 
 model Verification {
-    id    String  @id @default(cuid())
-    email String?
+    id      String  @id @default(cuid())
+    email   String?
     user_id String?
-    role  String?
+    role    String?
 
     @@map("verification_requests")
 }
-
