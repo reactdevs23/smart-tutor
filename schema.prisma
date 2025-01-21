@@ -20,7 +20,7 @@ model Student {
     password        String?
     created_at      DateTime  @default(now())
     updated_at      DateTime? @updatedAt()
-    is_verified     Boolean   @default(false)
+    is_verified     Boolean   @default(true)
 
     @@map("students")
 }
@@ -39,7 +39,7 @@ model Teacher {
     created_at      DateTime  @default(now())
     updated_at      DateTime? @updatedAt()
     availibility    Boolean   @default(false)
-    is_verified     Boolean   @default(false)
+    is_verified     Boolean   @default(true)
 
     @@map("teachers")
 }
@@ -51,7 +51,7 @@ model Admin {
     description     String?
     profile_picture String?
     password        String?
-    is_verified     Boolean @default(false)
+    is_verified     Boolean @default(true)
 
     @@map("admin_users")
 }
