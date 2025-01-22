@@ -4,15 +4,23 @@ import clsx from "clsx";
 import classes from "./StuedentList.module.css";
 import { banner, messageIcon, userImg } from "@/images";
 import { Heading, Text } from "@/components/common";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { get } from "@/lib/api"; // Assuming you have a GET helper in your API utility
 import Header from "@/components/Athentication/Header/Header";
 import { ROLES } from "../../../lib/constant";
+import Pagination from "@/components/common/Pagination/Pagination";
 const StuedentList = () => {
   const [students, setStudents] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-
+  //pagination
+  const [currentPage, setCurrentPage] = useState(1);
+  const [itemsPerPage, setItemsPerPage] = useState(6);
+  const currentTableData = useMemo(() => {
+    const firstPageIndex = (currentPage - 1) * itemsPerPage;
+    const lastPageIndex = firstPageIndex + itemsPerPage;
+    return students?.slice(firstPageIndex, lastPageIndex);
+  }, [currentPage, students, itemsPerPage]);
   useEffect(() => {
     const fetchStudents = async () => {
       try {
@@ -51,10 +59,14 @@ const StuedentList = () => {
         <Text lg primitiveError textCenter bold>{`Error: ${error}`}</Text>
       )}
       <div className={classes.cards}>
-        {students?.map((el, i) => (
+        {currentTableData?.map((el, i) => (
           <div className={classes.card} key={i}>
             <div className={classes.imgContainer}>
-              <img src={userImg.src} alt="#" className={classes.img} />
+              <img
+                src={el.profile_picture ? el.profile_picture : userImg.src}
+                alt="#"
+                className={classes.img}
+              />
             </div>
             <div className={classes.infoContainer}>
               <div className={classes.header}>
@@ -100,6 +112,15 @@ const StuedentList = () => {
             </div>
           </div>
         ))}
+      </div>{" "}
+      <div className={classes.pagination}>
+        <Pagination
+          currentPage={currentPage}
+          totalCount={students.length}
+          pageSize={itemsPerPage}
+          onPageChange={(page) => setCurrentPage(page)}
+          siblingCount={0}
+        />
       </div>
     </section>
   );

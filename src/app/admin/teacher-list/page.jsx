@@ -4,15 +4,24 @@ import clsx from "clsx";
 import classes from "./TeacherList.module.css";
 import { banner } from "@/images";
 import { Heading, Text } from "@/components/common";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { get } from "@/lib/api"; // Assuming you have a GET helper in your API utility
 import SingleRow from "./SingleRow";
 import Header from "@/components/Athentication/Header/Header";
 import { ROLES } from "../../../../lib/constant";
+import Pagination from "@/components/common/Pagination/Pagination";
 const TeacherList = () => {
   const [teachers, setTeachers] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  //pagination
+  const [currentPage, setCurrentPage] = useState(1);
+  const [itemsPerPage, setItemsPerPage] = useState(10);
+  const currentTableData = useMemo(() => {
+    const firstPageIndex = (currentPage - 1) * itemsPerPage;
+    const lastPageIndex = firstPageIndex + itemsPerPage;
+    return teachers?.slice(firstPageIndex, lastPageIndex);
+  }, [currentPage, teachers, itemsPerPage]);
   const handleDeleteSuccess = (id) => {
     setTeachers((prev) => prev.filter((teacher) => teacher.id !== id));
   };
@@ -49,12 +58,13 @@ const TeacherList = () => {
       )
     );
   };
+
   return (
     <section className={clsx(classes.wrapper, "container")}>
       <Header heading="Teacher List" info="All the Teachers" />
 
       {/* Display student table only if data is available */}
-      <div className={classes.tableContainer}>
+      <div className={clsx(classes.tableContainer, "overflow")}>
         <table className={classes.table}>
           <thead>
             <tr>
@@ -69,7 +79,7 @@ const TeacherList = () => {
             </tr>
           </thead>
           <tbody>
-            {teachers?.map((el, i) => (
+            {currentTableData?.map((el, i) => (
               <SingleRow
                 {...el}
                 key={i}
@@ -79,6 +89,15 @@ const TeacherList = () => {
             ))}
           </tbody>
         </table>
+      </div>
+      <div className={classes.pagination}>
+        <Pagination
+          currentPage={currentPage}
+          totalCount={teachers.length}
+          pageSize={itemsPerPage}
+          onPageChange={(page) => setCurrentPage(page)}
+          siblingCount={0}
+        />
       </div>
     </section>
   );

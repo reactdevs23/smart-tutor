@@ -14,6 +14,7 @@ const Successfull = ({
   img,
   backToText,
   mainHeading,
+  buttonText,
 }) => {
   return (
     <Modal
@@ -37,12 +38,12 @@ const Successfull = ({
           </Text>
         </div>
         {to ? (
-          <Button to={to} onClick={onClose} base>
+          <Button to={to} base>
             {backToText ? backToText : "Back to Home"}
           </Button>
         ) : (
           <Button onClick={onClose} base>
-            Back
+            {buttonText ? buttonText : "    Back"}
           </Button>
         )}
       </div>

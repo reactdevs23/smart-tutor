@@ -54,6 +54,9 @@ const StudentDashboard = () => {
   const [profile_picture, setProfilePicture] = useState(null); // Use profile_picture
   const [showSuccessModal, setShowSuccessModal] = useState(false);
   const [showErrorModal, setShowErrorModal] = useState(false);
+  const [errorMessage, setErrorMessage] = useState(
+    "Please fill out all the required fields before proceeding"
+  );
   // Load data from localStorage on mount
 
   useEffect(() => {
@@ -103,6 +106,20 @@ const StudentDashboard = () => {
   const handleSubmit = async (event) => {
     event.preventDefault();
 
+    // Validation: Check if any required field is empty
+    if (
+      !name ||
+      !email ||
+      !description ||
+      !medium ||
+      !subjects.length ||
+      !myClassName ||
+      !profile_picture
+    ) {
+      setShowErrorModal(true); // Show error modal
+      return;
+    }
+
     console.log("Profile Picture before submit:", profile_picture);
     const updatedData = {
       name,
@@ -114,27 +131,28 @@ const StudentDashboard = () => {
       profile_picture,
     };
 
-    console.log("Updated Data (before submission):", updatedData); // Debugging
+    console.log("Updated Data (before submission):", updatedData);
 
     try {
       // Make PATCH API call
       const updatedResponse = await updateStudentData(studentId, updatedData);
-      console.log("Updated Response:", updatedResponse); // Check API response
+      console.log("Updated Response:", updatedResponse);
 
       // Update localStorage with the new data
       const updatedLocalStorageData = {
         ...JSON.parse(localStorage.getItem("userData") || "{}"),
-        ...updatedResponse, // Use response from API as the latest data
+        ...updatedResponse,
       };
 
       console.log("updated data", updatedLocalStorageData);
       localStorage.setItem("userData", JSON.stringify(updatedLocalStorageData));
 
       // Show success message
-      alert("Student data updated successfully!");
+
+      setShowSuccessModal(true);
     } catch (error) {
-      console.error("Error updating data:", 8``); // Log the error
-      alert("There was an error updating your data.");
+      setErrorMessage(error.message);
+      setShowErrorModal(true); // Show error modal in case of API error
     }
   };
 
@@ -244,19 +262,19 @@ const StudentDashboard = () => {
         onClose={() => {
           setShowSuccessModal(false);
         }}
-        backToText="Back"
-        to="/student-dashboard"
+        backToText="See Teacher List"
+        to="/teacher-list"
       />
       <Successfull
+        mainHeading="Failed !"
         heading="Data Upload Failed!"
-        info="We encountered an issue while uploading your data. Please try again ."
+        info={errorMessage}
         isActive={showErrorModal}
         img={errorImg}
         onClose={() => {
           setShowErrorModal(false);
         }}
-        backToText="Back"
-        to="/student-dashboard"
+        buttonText="Try Again"
       />
     </>
   );

@@ -8,6 +8,8 @@ import clsx from "clsx";
 import Link from "next/link";
 import { ROLES } from "../../../../lib/constant";
 import { post } from "../../../../lib/api";
+import Successfull from "@/components/Modal/Successfull/Successfull";
+import { errorImg } from "@/images";
 
 const LoginForm = () => {
   const [email, setEmail] = useState("");
@@ -15,7 +17,10 @@ const LoginForm = () => {
   const [showDropdown, setShowDropdown] = useState(false);
   const [selectedRole, setSelectedRole] = useState("Teacher");
   const [loading, setLoading] = useState(false); // Track loading state
-
+  const [showErrorModal, setShowErrorModal] = useState(false);
+  const [errorMessage, setErrorMessage] = useState(
+    "Please fill out all the required fields before proceeding"
+  );
   const handleSignIn = async (e) => {
     e.preventDefault();
     setLoading(true); // Set loading to true when starting the sign-in process
@@ -38,100 +43,105 @@ const LoginForm = () => {
         // Redirect the user
         window.location.href = "/";
       } else {
-        console.error("Unexpected response:", response);
-        alert("Sign-in unsuccessful! Please check your email or password.");
-      }
-    } catch (error) {
-      console.error("Sign-in error:", error);
-
-      // Handle specific error for "email not found"
-      if (error.response?.data?.message?.toLowerCase().includes("email")) {
-        alert("Email not found. Please check your email and try again.");
-      } else {
-        alert(
-          error.response?.data?.message ||
-            "Error occurred during sign-in. Please try again."
+        setShowErrorModal(true);
+        setErrorMessage(
+          "Sign-in unsuccessful! Please check your email or password."
         );
       }
+    } catch (error) {
+      setShowErrorModal(true);
     } finally {
       setLoading(false); // Set loading to false after the request completes
     }
   };
 
   return (
-    <div className={classes.formContainer}>
-      <div className={classes.header}>
-        <Heading xl3 primitive950 bold>
-          Sign In
-        </Heading>
-        <Text base semiBold primitive600 className={classes.needAnAccount}>
-          Access your SmartTutors account with your email and passcode.
+    <>
+      <div className={classes.formContainer}>
+        <div className={classes.header}>
+          <Heading xl3 primitive950 bold>
+            Sign In
+          </Heading>
+          <Text base semiBold primitive600 className={classes.needAnAccount}>
+            Access your SmartTutors account with your email and passcode.
+          </Text>
+        </div>
+        <form className={classes.inputWrapper} onSubmit={handleSignIn}>
+          <Input
+            type="email"
+            label="Email"
+            value={email}
+            setValue={setEmail}
+            placeholder="Email"
+          />
+          <Input
+            label="Password"
+            type="password"
+            value={password}
+            setValue={setPassword}
+            placeholder="Password"
+          />
+          <Dropdown
+            label="Select Category"
+            items={Object.values(ROLES)}
+            isActive={showDropdown}
+            setIsActive={setShowDropdown}
+            selectedValue={selectedRole}
+            onSelect={(val) => setSelectedRole(val)}
+          />
+          <Button
+            transparent
+            className={classes.forgotPasword}
+            to="/forgot-password"
+          >
+            Forgot Password
+          </Button>
+          <Button
+            btnPrimary
+            base
+            type="submit"
+            className={classes.submitButton}
+            loading={loading}
+            disabled={loading} // Disable button while loading
+          >
+            {loading ? "Signing In..." : "Sign In"} {/* Show loading text */}
+          </Button>
+        </form>
+        <Text primitive600 sm className={classes.or} textCenter>
+          or
         </Text>
-      </div>
-      <form className={classes.inputWrapper} onSubmit={handleSignIn}>
-        <Input
-          type="email"
-          label="Email"
-          value={email}
-          setValue={setEmail}
-          placeholder="Email"
-        />
-        <Input
-          label="Password"
-          type="password"
-          value={password}
-          setValue={setPassword}
-          placeholder="Password"
-        />
-        <Dropdown
-          label="Select Category"
-          items={Object.values(ROLES)}
-          isActive={showDropdown}
-          setIsActive={setShowDropdown}
-          selectedValue={selectedRole}
-          onSelect={(val) => setSelectedRole(val)}
-        />
-        <Button
-          transparent
-          className={classes.forgotPasword}
-          to="/forgot-password"
-        >
-          Forgot Password
-        </Button>
-        <Button
-          btnPrimary
-          base
-          type="submit"
-          className={classes.submitButton}
-          loading={loading}
-          disabled={loading} // Disable button while loading
-        >
-          {loading ? "Signing In..." : "Sign In"} {/* Show loading text */}
-        </Button>
-      </form>
-      <Text primitive600 sm className={classes.or} textCenter>
-        or
-      </Text>
-      <div className={classes.buttonContainer}>
-        <Button primitive50 base>
-          <FcGoogle className={classes.logo} /> Use Google
-        </Button>
-        <Button primitive50 base>
-          <FaApple className={clsx(classes.logo, classes.appleLogo)} /> Use
-          Apple
-        </Button>
-        <Button primitive50 base className={classes.fbButton}>
-          <FaFacebook className={clsx(classes.logo, classes.fbLogo)} /> Use
-          Facebook
-        </Button>
-      </div>
-      <Text xs primitive600 className={classes.needAnAccount}>
-        Don't have an account?
-        <Link className={classes.link} href="/sign-up">
-          Sign Up
-        </Link>
-      </Text>
-    </div>
+        <div className={classes.buttonContainer}>
+          <Button primitive50 base>
+            <FcGoogle className={classes.logo} /> Use Google
+          </Button>
+          <Button primitive50 base>
+            <FaApple className={clsx(classes.logo, classes.appleLogo)} /> Use
+            Apple
+          </Button>
+          <Button primitive50 base className={classes.fbButton}>
+            <FaFacebook className={clsx(classes.logo, classes.fbLogo)} /> Use
+            Facebook
+          </Button>
+        </div>
+        <Text xs primitive600 className={classes.needAnAccount}>
+          Don't have an account?
+          <Link className={classes.link} href="/sign-up">
+            Sign Up
+          </Link>
+        </Text>
+      </div>{" "}
+      <Successfull
+        mainHeading="Failed"
+        heading="Login Failed!"
+        info={errorMessage}
+        isActive={showErrorModal}
+        img={errorImg}
+        onClose={() => {
+          setShowErrorModal(false);
+        }}
+        buttonText="Try Again"
+      />
+    </>
   );
 };
 

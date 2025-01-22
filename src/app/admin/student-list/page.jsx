@@ -1,5 +1,5 @@
 "use client";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import clsx from "clsx";
 import classes from "./StudentList.module.css";
 import { banner } from "@/images";
@@ -8,12 +8,20 @@ import { ROLES } from "../../../../lib/constant"; // Assuming you have a constan
 import SingleRow from "./SingleRow";
 import Header from "@/components/Athentication/Header/Header";
 import { get } from "../../../../lib/api";
+import Pagination from "@/components/common/Pagination/Pagination";
 
 const StudentList = () => {
   const [students, setStudents] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-
+  // pagination
+  const [currentPage, setCurrentPage] = useState(1);
+  const [itemsPerPage, setItemsPerPage] = useState(10);
+  const currentTableData = useMemo(() => {
+    const firstPageIndex = (currentPage - 1) * itemsPerPage;
+    const lastPageIndex = firstPageIndex + itemsPerPage;
+    return students?.slice(firstPageIndex, lastPageIndex);
+  }, [currentPage, students, itemsPerPage]);
   // Fetch student data on component mount
   const fetchStudents = async () => {
     try {
@@ -54,16 +62,13 @@ const StudentList = () => {
   return (
     <section className={clsx(classes.wrapper, "container")}>
       <Header heading="Student List" info="All the Students" />
-
       {/* Display loading indicator */}
       {loading && <p>Loading students...</p>}
-
       {/* Display error message */}
       {error && <p>Error: {error}</p>}
-
       {/* Display student table only if data is available */}
       {!loading && !error && (
-        <div className={classes.tableContainer}>
+        <div className={clsx(classes.tableContainer, "overflow")}>
           <table className={classes.table}>
             <thead>
               <tr>
@@ -95,7 +100,16 @@ const StudentList = () => {
             </tbody>
           </table>
         </div>
-      )}
+      )}{" "}
+      <div className={classes.pagination}>
+        <Pagination
+          currentPage={currentPage}
+          totalCount={students.length}
+          pageSize={itemsPerPage}
+          onPageChange={(page) => setCurrentPage(page)}
+          siblingCount={0}
+        />
+      </div>
     </section>
   );
 };

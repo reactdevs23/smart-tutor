@@ -83,15 +83,15 @@ const SingleRow = ({
         </td>
         <td>
           <div className={classes.list}>
-            {subjects?.length > 0 ? (
+            {subjects?.length ? (
               subjects.map((item, id) => (
                 <Text sm semiBold key={id}>
-                  {item}
+                  {item} {id < subjects.length - 1 && ", "}
                 </Text>
               ))
             ) : (
               <Text sm semiBold>
-                No subjects listed
+                N/A
               </Text>
             )}
           </div>

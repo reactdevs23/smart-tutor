@@ -34,7 +34,7 @@ const Modal = ({
         {...rest}
       >
         <div className={classes.header}>
-          <Heading primitive950 semiBold lg>
+          <Heading primitive950 bold lg>
             {heading}
           </Heading>
           <button className={classes.closeButton} onClick={onClose}>

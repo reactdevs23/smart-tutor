@@ -110,7 +110,10 @@ const Navbar = () => {
             ))}
 
           {/* User authentication section (login/logout) */}
-          <div className={classes.buttonContainer}>
+          <div
+            className={classes.buttonContainer}
+            onClick={() => setSidebar(false)}
+          >
             {isLoggedIn ? (
               <Dropdown
                 type2

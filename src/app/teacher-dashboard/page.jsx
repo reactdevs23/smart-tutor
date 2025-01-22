@@ -69,7 +69,9 @@ const TeacherDashboard = () => {
   const [teacherId, setTeacherId] = useState("");
   const [showSuccessModal, setShowSuccessModal] = useState(false);
   const [showErrorModal, setShowErrorModal] = useState(false);
-
+  const [errorMessage, setErrorMessage] = useState(
+    "Please fill out all the required fields before proceeding"
+  );
   // Load data from localStorage on mount
   useEffect(() => {
     const storedData = localStorage.getItem("userData");
@@ -116,6 +118,21 @@ const TeacherDashboard = () => {
   const handleSubmit = async (event) => {
     event.preventDefault();
 
+    // Validate required fields
+    if (
+      !name ||
+      !email ||
+      !salary ||
+      !description ||
+      !isAvailable ||
+      !medium ||
+      subjects.length === 0 ||
+      classLists.length === 0
+    ) {
+      setShowErrorModal(true);
+      return;
+    }
+
     const updatedData = {
       name,
       email,
@@ -140,11 +157,11 @@ const TeacherDashboard = () => {
         "teacherData",
         JSON.stringify(updatedLocalStorageData)
       );
-
       setShowSuccessModal(true);
     } catch (error) {
       console.error("Error updating data:", error);
-      alert("There was an error updating your data.");
+      setErrorMessage(error.message);
+      setShowErrorModal(true);
     }
   };
 
@@ -266,18 +283,18 @@ const TeacherDashboard = () => {
           setShowSuccessModal(false);
         }}
         backToText="Back"
-        to="/teacher-dashboard"
+        to="/student-list"
       />{" "}
       <Successfull
+        mainHeading="Failed"
         heading="Data Upload Failed!"
-        info="We encountered an issue while uploading your data. Please try again ."
+        info={errorMessage}
         isActive={showErrorModal}
         img={errorImg}
         onClose={() => {
           setShowErrorModal(false);
         }}
-        backToText="Back"
-        to="/teacher-dashboard"
+        buttonText="Try Again"
       />
     </>
   );

@@ -7,14 +7,22 @@ import { Heading, Text } from "@/components/common";
 import { banner, messageIcon, userImg } from "@/images";
 import Header from "@/components/Athentication/Header/Header";
 import { ROLES } from "../../../lib/constant";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import { get } from "../../../lib/api";
+import Pagination from "@/components/common/Pagination/Pagination";
 
 const TeacherLists = () => {
   const [teachers, setTeachers] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-
+  //pagination
+  const [currentPage, setCurrentPage] = useState(1);
+  const [itemsPerPage, setItemsPerPage] = useState(6);
+  const currentTableData = useMemo(() => {
+    const firstPageIndex = (currentPage - 1) * itemsPerPage;
+    const lastPageIndex = firstPageIndex + itemsPerPage;
+    return teachers?.slice(firstPageIndex, lastPageIndex);
+  }, [currentPage, teachers, itemsPerPage]);
   useEffect(() => {
     const fetchTeachers = async () => {
       setLoading(true); // Start loading before the API call
@@ -43,7 +51,6 @@ const TeacherLists = () => {
         heading="Teacher List"
         info="Detailed list of teachers with their subjects, availability, and contact details"
       />
-
       {loading && (
         <Text lg textCenter bold>
           Loading Teacher...
@@ -52,12 +59,15 @@ const TeacherLists = () => {
       {error && (
         <Text bold lg primitiveError textCenter>{`Error: ${error}`}</Text>
       )}
-
       <div className={classes.cards}>
-        {teachers?.map((el, i) => (
+        {currentTableData?.map((el, i) => (
           <div className={classes.card} key={i}>
             <div className={classes.imgContainer}>
-              <img src={userImg.src} alt="#" className={classes.img} />
+              <img
+                src={el.profile_picture ? el.profile_picture : userImg.src}
+                alt="#"
+                className={classes.img}
+              />
             </div>
             <div className={classes.infoContainer}>
               <div className={classes.header}>
@@ -113,6 +123,15 @@ const TeacherLists = () => {
             </div>
           </div>
         ))}
+      </div>{" "}
+      <div className={classes.pagination}>
+        <Pagination
+          currentPage={currentPage}
+          totalCount={teachers.length}
+          pageSize={itemsPerPage}
+          onPageChange={(page) => setCurrentPage(page)}
+          siblingCount={0}
+        />
       </div>
     </section>
   );
