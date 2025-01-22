@@ -282,7 +282,7 @@ const TeacherDashboard = () => {
         onClose={() => {
           setShowSuccessModal(false);
         }}
-        backToText="Back"
+        backToText="See Student List"
         to="/student-list"
       />{" "}
       <Successfull
