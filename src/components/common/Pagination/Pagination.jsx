@@ -1,3 +1,4 @@
+"use client";
 import React, { useState, useEffect } from "react";
 import clsx from "clsx";
 
@@ -21,7 +22,7 @@ const Pagination = (props) => {
     pageSize,
   });
   const DOTS = "...";
-  const [isMobile, setIsMobile] = useState(window.innerWidth < 767);
+  const [isMobile, setIsMobile] = useState(false);
 
   useEffect(() => {
     const handleResize = () => {
