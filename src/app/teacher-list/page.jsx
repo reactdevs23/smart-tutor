@@ -10,8 +10,10 @@ import { ROLES } from "../../../lib/constant";
 import { useState, useEffect, useMemo } from "react";
 import { get } from "../../../lib/api";
 import Pagination from "@/components/common/Pagination/Pagination";
+import { useRouter } from "next/navigation";
 
 const TeacherLists = () => {
+  const router = useRouter();
   const [teachers, setTeachers] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -61,7 +63,11 @@ const TeacherLists = () => {
       )}
       <div className={classes.cards}>
         {currentTableData?.map((el, i) => (
-          <div className={classes.card} key={i}>
+          <div
+            className={classes.card}
+            key={i}
+            onClick={() => router.push(`/teacher-list/${el.id}`)}
+          >
             <div className={classes.imgContainer}>
               <img
                 src={el.profile_picture ? el.profile_picture : userImg.src}

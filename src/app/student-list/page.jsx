@@ -9,7 +9,9 @@ import { get } from "@/lib/api"; // Assuming you have a GET helper in your API u
 import Header from "@/components/Athentication/Header/Header";
 import { ROLES } from "../../../lib/constant";
 import Pagination from "@/components/common/Pagination/Pagination";
+import { useRouter } from "next/navigation";
 const StuedentList = () => {
+  const router = useRouter();
   const [students, setStudents] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -60,7 +62,11 @@ const StuedentList = () => {
       )}
       <div className={classes.cards}>
         {currentTableData?.map((el, i) => (
-          <div className={classes.card} key={i}>
+          <div
+            className={classes.card}
+            key={i}
+            onClick={() => router.push(`/student-list/${el.id}`)}
+          >
             <div className={classes.imgContainer}>
               <img
                 src={el.profile_picture ? el.profile_picture : userImg.src}

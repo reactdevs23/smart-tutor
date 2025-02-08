@@ -1,0 +1,28 @@
+.wrapper {
+  padding: 50px 0;
+}
+.container {
+  background: var(--Primitive-0);
+  border-radius: 16px;
+  padding: 24px;
+  display: grid;
+  grid-template-columns: 400px 1fr;
+  gap: 15px;
+}
+.heading {
+  grid-column: 1/-1;
+  text-align: left;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.arrow {
+  font-size: 20px;
+}
+@media only screen and (max-width: 991px) {
+  .container {
+    display: flex;
+    flex-direction: column;
+    padding: 12px;
+  }
+}

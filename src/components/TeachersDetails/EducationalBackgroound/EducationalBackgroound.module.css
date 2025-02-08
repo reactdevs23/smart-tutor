@@ -1,0 +1,48 @@
+.container {
+  border: 1px solid var(--Primitive-200);
+  border-radius: 15px;
+  display: flex;
+  flex-direction: column;
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+.universityList {
+  display: flex;
+  flex-direction: column;
+  gap: 32px;
+}
+.universityLogo {
+  max-width: 80px;
+  width: 100%;
+}
+.list {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
+.info {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+@media only screen and (max-width: 1199px) {
+  .universityLogo {
+    max-width: 55px;
+  }
+}
+@media only screen and (max-width: 991px) {
+  .container {
+    grid-column: 1/-1;
+  }
+}
+@media only screen and (max-width: 520px) {
+  .list {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  .universityLogo {
+    max-width: 80px;
+  }
+}

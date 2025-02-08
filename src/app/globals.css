@@ -30,6 +30,13 @@
   --Error: #ff4864;
   --Warning: #ffb729;
   --Success: #24c788;
+
+  --fontFamily: "Inter", sans-serif;
+  --chat-bg: #20212e;
+  --sender-msg-bg: linear-gradient(114.79deg, #c040fc -17.76%, #4b3cff 99.88%);
+  --reciver-msg-bg: #434151;
+  --secondary-bg: #30303e;
+  --text-color: #ecddff;
 }
 #root {
   min-height: 100vh;
@@ -39,7 +46,7 @@ body {
   min-height: 100vh;
   overflow-x: hidden;
   scroll-behavior: smooth;
-  background: var(--Primitive-0);
+  background: var(--Primitive-50);
 }
 .container {
   max-width: 1280px;

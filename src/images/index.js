@@ -20,6 +20,17 @@ import ourSystem from "./ourSystem.png";
 import messageIcon from "./message.png";
 import userImg from "./userImg.png";
 import errorImg from "./Error.svg";
+
+// chatbox
+import send from "./chat/send.svg";
+import user from "./chat/user.svg";
+import oponent from "./chat/oponent.svg";
+import emoji from "./chat/emoji.svg";
+
+// details
+import melbourneUniversity from "./melbourneUniversity.png";
+import sydneyUniversity from "./sydneyUniversity.png";
+
 export {
   logo,
   //authentication
@@ -43,4 +54,10 @@ export {
   messageIcon,
   userImg,
   errorImg,
+  send,
+  user,
+  oponent,
+  emoji,
+  melbourneUniversity,
+  sydneyUniversity,
 };

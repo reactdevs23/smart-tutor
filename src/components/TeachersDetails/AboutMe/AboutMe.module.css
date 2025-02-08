@@ -1,0 +1,25 @@
+.container {
+  border: 1px solid var(--Primitive-200);
+  border-radius: 15px;
+  display: flex;
+  flex-direction: column;
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+.item {
+  color: #00809b;
+  background: rgb(0, 128, 155, 0.1);
+  border-radius: 8px;
+  padding: 6px;
+  min-width: 30px;
+  width: max-content;
+  text-transform: uppercase;
+}
+.list {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
