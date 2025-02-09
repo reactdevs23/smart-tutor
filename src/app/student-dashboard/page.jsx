@@ -115,8 +115,7 @@ const StudentDashboard = () => {
       !description ||
       !medium ||
       !subjects.length ||
-      !myClassName ||
-      !profile_picture
+      !myClassName
     ) {
       setShowErrorModal(true); // Show error modal
       return;
