@@ -13,7 +13,7 @@
   padding: 12px 0;
   border-bottom: 1px solid rgba(0, 0, 0, 0.05);
   background: var(--Primitive-0);
-  height: 95px;
+  min-height: 95px;
 }
 .primitive950 {
   background: var(--Primitive-950);

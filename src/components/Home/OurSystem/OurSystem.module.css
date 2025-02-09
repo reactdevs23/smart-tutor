@@ -24,10 +24,12 @@
 
 @media only screen and (max-width: 991px) {
   .wrapper {
+    background: #021720;
   }
   .container {
     grid-template-columns: 1fr;
     max-width: 500px;
     width: 100%;
+    padding: 32px;
   }
 }

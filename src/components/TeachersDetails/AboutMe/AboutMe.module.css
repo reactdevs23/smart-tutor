@@ -23,3 +23,13 @@
   gap: 8px;
   flex-wrap: wrap;
 }
+.infoContainer {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding: 12px 0;
+}
+
+.details {
+  font-weight: 400;
+}

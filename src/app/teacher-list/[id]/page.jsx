@@ -55,7 +55,7 @@ const TeacherDetails = () => {
         <button className={classes.heading} onClick={route.back}>
           <IoChevronBack className={classes.arrow} /> <Heading xl>Back</Heading>
         </button>
-        <Card teacher={teacher} />
+        <Card data={teacher} />
         <EducationalBackgroound />
         <OnGoingCourse />
         <AboutMe teacher={teacher} /> <ContactInfo email={teacher.email} />

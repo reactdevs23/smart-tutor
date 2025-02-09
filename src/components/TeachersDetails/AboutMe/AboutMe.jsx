@@ -1,6 +1,6 @@
 import { Heading, Text } from "@/components/common";
 import classes from "./AboutMe.module.css";
-const AboutMe = () => {
+const AboutMe = ({ teacher }) => {
   const offerd = [
     "English grammar",
     "Online education ",
@@ -18,18 +18,19 @@ const AboutMe = () => {
         groups, in various schools. It is my goal to make learning engaging. My
         hobby (s) is/are bake. My profession is a professional.
       </Text>
-      <div>
-        <Heading medium base className={classes.label}>
-          Graduated From :
-        </Heading>
-        <Text sm>{teacher?.graduated_from}</Text>
-      </div>{" "}
-      <div>
-        <Heading medium base className={classes.label}>
-          Subject Name :
-        </Heading>
-        <Text sm>{teacher?.department_name}</Text>
-      </div>
+      {teacher && (
+        <div className={classes.infoContainer}>
+          <Heading semiBold lg className={classes.label}>
+            Graduated From :{" "}
+            <span className={classes.details}>{teacher?.graduated_from}</span>
+          </Heading>
+
+          <Heading semiBold lg className={classes.label}>
+            Subject Name :{" "}
+            <span className={classes.details}>{teacher?.department_name}</span>
+          </Heading>
+        </div>
+      )}
       <div className={classes.list}>
         {offerd.map((el, i) => (
           <Text sm semiBold className={classes.item} key={i}>
