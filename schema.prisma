@@ -12,6 +12,8 @@ model Student {
     id              String    @id @default(cuid())
     name            String
     email           String
+    institute_name  String?
+    department_name String?
     description     String?
     profile_picture String?
     curriculum_type String?
@@ -29,6 +31,8 @@ model Teacher {
     id              String    @id @default(cuid())
     name            String
     email           String
+    graduated_from  String?
+    department_name String?
     description     String?
     profile_picture String?
     curriculum_type String?

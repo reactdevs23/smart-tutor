@@ -19,7 +19,7 @@ export const GET = async (
     if (!teacher) {
       return Response.json(error("Not Found!"), { status: 404 });
     }
-
+    delete teacher["password" as string];
     return Response.json(success(teacher));
   } catch (err) {
     console.error("Error fetching teacher:", err);
