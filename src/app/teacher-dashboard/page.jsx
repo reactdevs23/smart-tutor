@@ -60,6 +60,8 @@ const TeacherDashboard = () => {
   const [email, setEmail] = useState("");
   const [salary, setSalary] = useState("");
   const [description, setDescription] = useState("");
+  const [varsityName, setVarsityName] = useState("");
+  const [subjectName, setSubjectName] = useState("");
   const [selectedImage, setSelectedImage] = useState(null);
   const [previewUrl, setPreviewUrl] = useState(null);
   const [isAvailable, setIsAvailable] = useState("");
@@ -138,6 +140,8 @@ const TeacherDashboard = () => {
       email,
       salary,
       description,
+      graduated_from: varsityName,
+      department_name: subjectName,
       availability: isAvailable,
       curriculum_type: medium,
       subjects,
@@ -202,6 +206,22 @@ const TeacherDashboard = () => {
             value={salary}
             setValue={setSalary}
             placeholder="Enter your salary"
+          />{" "}
+          <Input
+            name="varisityName"
+            type="text"
+            label="University Name"
+            value={varsityName}
+            setValue={setVarsityName}
+            placeholder="Enter your University Name"
+          />{" "}
+          <Input
+            name="subjectName"
+            type="text"
+            label="Subject Name"
+            value={subjectName}
+            setValue={setSubjectName}
+            placeholder="Enter your Subject Name Name"
           />
           <TextArea
             textarea

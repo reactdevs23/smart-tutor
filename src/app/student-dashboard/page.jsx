@@ -45,6 +45,7 @@ const StudentDashboard = () => {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [description, setDescription] = useState("");
+
   const [selectedImage, setSelectedImage] = useState(null);
   const [previewUrl, setPreviewUrl] = useState(null);
   const [medium, setMedium] = useState("");
@@ -54,6 +55,7 @@ const StudentDashboard = () => {
   const [profile_picture, setProfilePicture] = useState(null); // Use profile_picture
   const [showSuccessModal, setShowSuccessModal] = useState(false);
   const [showErrorModal, setShowErrorModal] = useState(false);
+
   const [errorMessage, setErrorMessage] = useState(
     "Please fill out all the required fields before proceeding"
   );

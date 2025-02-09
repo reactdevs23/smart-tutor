@@ -58,7 +58,7 @@ const TeacherDetails = () => {
         <Card teacher={teacher} />
         <EducationalBackgroound />
         <OnGoingCourse />
-        <AboutMe /> <ContactInfo email={teacher.email} />
+        <AboutMe teacher={teacher} /> <ContactInfo email={teacher.email} />
       </div>
     </main>
   );
